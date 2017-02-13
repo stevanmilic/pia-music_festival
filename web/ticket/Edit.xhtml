@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="TicketEditDlg" widgetVar="TicketEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditTicketTitle}">
+            <h:form id="TicketEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{ticketController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditTicketLabel_registeredUser}" for="registeredUser" />
+                        <p:selectOneMenu id="registeredUser" value="#{ticketController.selected.registeredUser}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{registeredUserController.itemsAvailableSelectOne}"
+                                           var="registeredUserItem"
+                                           itemValue="#{registeredUserItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.EditTicketLabel_event}" for="event" />
+                        <p:selectOneMenu id="event" value="#{ticketController.selected.event}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{eventController.itemsAvailableSelectOne}"
+                                           var="eventItem"
+                                           itemValue="#{eventItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.EditTicketLabel_timestamp}" for="timestamp" />
+                        <p:calendar id="timestamp" pattern="MM/dd/yyyy HH:mm:ss" value="#{ticketController.selected.timestamp}" title="#{bundle.EditTicketTitle_timestamp}" required="true" requiredMessage="#{bundle.EditTicketRequiredMessage_timestamp}" showOn="button"/>
+                        <p:outputLabel value="#{bundle.EditTicketLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{ticketController.selected.id}" title="#{bundle.EditTicketTitle_id}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{ticketController.update}" value="#{bundle.Save}" update="display,:TicketListForm:datalist,:growl" oncomplete="handleSubmit(args, 'TicketEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="TicketEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

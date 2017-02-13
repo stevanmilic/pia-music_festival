@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="EventEditDlg" widgetVar="EventEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditEventTitle}">
+            <h:form id="EventEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{eventController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditEventLabel_visitCount}" for="visitCount" />
+                        <p:inputText id="visitCount" value="#{eventController.selected.visitCount}" title="#{bundle.EditEventTitle_visitCount}" />
+                        <p:outputLabel value="#{bundle.EditEventLabel_maxTickets}" for="maxTickets" />
+                        <p:inputText id="maxTickets" value="#{eventController.selected.maxTickets}" title="#{bundle.EditEventTitle_maxTickets}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_maxTickets}"/>
+                        <p:outputLabel value="#{bundle.EditEventLabel_maxReservations}" for="maxReservations" />
+                        <p:inputText id="maxReservations" value="#{eventController.selected.maxReservations}" title="#{bundle.EditEventTitle_maxReservations}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_maxReservations}"/>
+                        <p:outputLabel value="#{bundle.EditEventLabel_name}" for="name" />
+                        <p:inputText id="name" value="#{eventController.selected.name}" title="#{bundle.EditEventTitle_name}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_name}"/>
+                        <p:outputLabel value="#{bundle.EditEventLabel_startDate}" for="startDate" />
+                        <p:calendar id="startDate" pattern="MM/dd/yyyy" value="#{eventController.selected.startDate}" title="#{bundle.EditEventTitle_startDate}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_startDate}" showOn="button"/>
+                        <p:outputLabel value="#{bundle.EditEventLabel_endDate}" for="endDate" />
+                        <p:calendar id="endDate" pattern="MM/dd/yyyy" value="#{eventController.selected.endDate}" title="#{bundle.EditEventTitle_endDate}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_endDate}" showOn="button"/>
+                        <p:outputLabel value="#{bundle.EditEventLabel_pricePerDay}" for="pricePerDay" />
+                        <p:inputText id="pricePerDay" value="#{eventController.selected.pricePerDay}" title="#{bundle.EditEventTitle_pricePerDay}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_pricePerDay}"/>
+                        <p:outputLabel value="#{bundle.EditEventLabel_priceForWhole}" for="priceForWhole" />
+                        <p:inputText id="priceForWhole" value="#{eventController.selected.priceForWhole}" title="#{bundle.EditEventTitle_priceForWhole}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_priceForWhole}"/>
+                        <p:outputLabel value="#{bundle.EditEventLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{eventController.selected.id}" title="#{bundle.EditEventTitle_id}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{eventController.update}" value="#{bundle.Save}" update="display,:EventListForm:datalist,:growl" oncomplete="handleSubmit(args, 'EventEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="EventEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

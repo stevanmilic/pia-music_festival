@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="DetailEventEditDlg" widgetVar="DetailEventEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditDetailEventTitle}">
+            <h:form id="DetailEventEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{detailEventController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditDetailEventLabel_event}" for="event" />
+                        <p:selectOneMenu id="event" value="#{detailEventController.selected.event}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{eventController.itemsAvailableSelectOne}"
+                                           var="eventItem"
+                                           itemValue="#{eventItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.EditDetailEventLabel_performer}" for="performer" />
+                        <p:inputText id="performer" value="#{detailEventController.selected.performer}" title="#{bundle.EditDetailEventTitle_performer}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_performer}"/>
+                        <p:outputLabel value="#{bundle.EditDetailEventLabel_startTime}" for="startTime" />
+                        <p:calendar id="startTime" pattern="MM/dd/yyyy" value="#{detailEventController.selected.startTime}" title="#{bundle.EditDetailEventTitle_startTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_startTime}" showOn="button"/>
+                        <p:outputLabel value="#{bundle.EditDetailEventLabel_endTime}" for="endTime" />
+                        <p:calendar id="endTime" pattern="MM/dd/yyyy HH:mm:ss" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}"  showOn="button"/>
+                        <p:outputLabel value="#{bundle.EditDetailEventLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{detailEventController.selected.id}" title="#{bundle.EditDetailEventTitle_id}" />
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{detailEventController.update}" value="#{bundle.Save}" update="display,:DetailEventListForm:datalist,:growl" oncomplete="handleSubmit(args, 'DetailEventEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="DetailEventEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
