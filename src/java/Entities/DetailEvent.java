@@ -41,7 +41,7 @@ public class DetailEvent implements Serializable {
     private Date startTime;
     
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="end_time")
+    @Column(name="end_time", nullable = false)
     @Type(type="timestamp")
     private Date endTime;
     
