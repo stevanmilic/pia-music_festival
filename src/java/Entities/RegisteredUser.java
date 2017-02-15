@@ -6,6 +6,7 @@
 package Entities;
 
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -25,6 +26,17 @@ public class RegisteredUser extends User {
     
     @OneToMany(mappedBy="registeredUser")
     private List<CommentEvent> comments;
+        
+    @Column(name="activated")
+    private boolean activated = false;
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
 
     public List<Ticket> getTickets() {
         return tickets;

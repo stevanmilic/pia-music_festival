@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="AdminUserViewDlg" widgetVar="AdminUserViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewAdminUserTitle}">
+            <h:form id="AdminUserViewForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{adminUserController.selected != null}">
+                        <h:outputText value="#{bundle.ViewAdminUserLabel_id}"/>
+                        <h:outputText value="#{adminUserController.selected.id}" title="#{bundle.ViewAdminUserTitle_id}"/>
+                        <h:outputText value="#{bundle.ViewAdminUserLabel_name}"/>
+                        <h:outputText value="#{adminUserController.selected.name}" title="#{bundle.ViewAdminUserTitle_name}"/>
+                        <h:outputText value="#{bundle.ViewAdminUserLabel_surName}"/>
+                        <h:outputText value="#{adminUserController.selected.surName}" title="#{bundle.ViewAdminUserTitle_surName}"/>
+                        <h:outputText value="#{bundle.ViewAdminUserLabel_userName}"/>
+                        <h:outputText value="#{adminUserController.selected.userName}" title="#{bundle.ViewAdminUserTitle_userName}"/>
+                        <h:outputText value="#{bundle.ViewAdminUserLabel_password}"/>
+                        <h:outputText value="#{adminUserController.selected.password}" title="#{bundle.ViewAdminUserTitle_password}"/>
+                        <h:outputText value="#{bundle.ViewAdminUserLabel_contactNumber}"/>
+                        <h:outputText value="#{adminUserController.selected.contactNumber}" title="#{bundle.ViewAdminUserTitle_contactNumber}"/>
+                        <h:outputText value="#{bundle.ViewAdminUserLabel_email}"/>
+                        <h:outputText value="#{adminUserController.selected.email}" title="#{bundle.ViewAdminUserTitle_email}"/>
+                    </p:panelGrid>
+                    <p:commandButton value="#{bundle.Close}" onclick="AdminUserViewDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

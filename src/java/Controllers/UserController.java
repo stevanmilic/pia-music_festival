@@ -1,9 +1,9 @@
 package Controllers;
 
-import Entities.Ticket;
+import Entities.User;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
-import Utils.TicketFacade;
+import Utils.UserFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,23 +19,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@Named("ticketController")
+@Named("userController")
 @SessionScoped
-public class TicketController implements Serializable {
+public class UserController implements Serializable {
 
     @EJB
-    private Utils.TicketFacade ejbFacade;
-    private List<Ticket> items = null;
-    private Ticket selected;
+    private Utils.UserFacade ejbFacade;
+    private List<User> items = null;
+    private User selected;
 
-    public TicketController() {
+    public UserController() {
     }
 
-    public Ticket getSelected() {
+    public User getSelected() {
         return selected;
     }
 
-    public void setSelected(Ticket selected) {
+    public void setSelected(User selected) {
         this.selected = selected;
     }
 
@@ -45,36 +45,36 @@ public class TicketController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private TicketFacade getFacade() {
+    private UserFacade getFacade() {
         return ejbFacade;
     }
 
-    public Ticket prepareCreate() {
-        selected = new Ticket();
+    public User prepareCreate() {
+        selected = new User();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TicketCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("UserCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("TicketUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("UserUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("TicketDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("UserDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<Ticket> getItems() {
+    public List<User> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -109,29 +109,29 @@ public class TicketController implements Serializable {
         }
     }
 
-    public Ticket getTicket(java.lang.Long id) {
+    public User getUser(java.lang.Long id) {
         return getFacade().find(id);
     }
 
-    public List<Ticket> getItemsAvailableSelectMany() {
+    public List<User> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Ticket> getItemsAvailableSelectOne() {
+    public List<User> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Ticket.class)
-    public static class TicketControllerConverter implements Converter {
+    @FacesConverter(forClass = User.class)
+    public static class UserControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            TicketController controller = (TicketController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "ticketController");
-            return controller.getTicket(getKey(value));
+            UserController controller = (UserController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "userController");
+            return controller.getUser(getKey(value));
         }
 
         java.lang.Long getKey(String value) {
@@ -151,11 +151,11 @@ public class TicketController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Ticket) {
-                Ticket o = (Ticket) object;
+            if (object instanceof User) {
+                User o = (User) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Ticket.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), User.class.getName()});
                 return null;
             }
         }

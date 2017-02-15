@@ -57,8 +57,11 @@ public class Event implements Serializable {
     @Column(name="max_reservations", nullable = false)
     private int maxReservations;
     
+    @Column(name="place", nullable = false)
+    private String place;
+    
     @Column(name="visit_count")
-    private int visitCount;
+    private int visitCount = 0;
     
     @OneToMany(mappedBy="event")
     private List<CommentEvent> comments;
@@ -82,8 +85,14 @@ public class Event implements Serializable {
     public void setVisitCount(int visitCount) {
         this.visitCount = visitCount;
     }
-    
-    
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
 
     public int getMaxTickets() {
         return maxTickets;

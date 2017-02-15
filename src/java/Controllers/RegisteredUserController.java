@@ -1,9 +1,9 @@
 package Controllers;
 
-import Entities.Ticket;
+import Entities.RegisteredUser;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
-import Utils.TicketFacade;
+import Utils.RegisteredUserFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,30 +12,39 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
-import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Named;
 
-@Named("ticketController")
+@Named("registeredUserController")
 @SessionScoped
-public class TicketController implements Serializable {
+public class RegisteredUserController implements Serializable {
 
     @EJB
-    private Utils.TicketFacade ejbFacade;
-    private List<Ticket> items = null;
-    private Ticket selected;
+    private Utils.RegisteredUserFacade ejbFacade;
+    private List<RegisteredUser> items = null;
+    private RegisteredUser selected;
+    private String confirmPassword;
 
-    public TicketController() {
+    public String getConfirmPassword() {
+        return confirmPassword;
     }
 
-    public Ticket getSelected() {
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public RegisteredUserController() {
+    }
+
+    public RegisteredUser getSelected() {
         return selected;
     }
 
-    public void setSelected(Ticket selected) {
+    public void setSelected(RegisteredUser selected) {
         this.selected = selected;
     }
 
@@ -45,36 +54,36 @@ public class TicketController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private TicketFacade getFacade() {
+    private RegisteredUserFacade getFacade() {
         return ejbFacade;
     }
 
-    public Ticket prepareCreate() {
-        selected = new Ticket();
+    public RegisteredUser prepareCreate() {
+        selected = new RegisteredUser();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TicketCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("RegisteredUserCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("TicketUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("RegisteredUserUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("TicketDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("RegisteredUserDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<Ticket> getItems() {
+    public List<RegisteredUser> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -109,29 +118,29 @@ public class TicketController implements Serializable {
         }
     }
 
-    public Ticket getTicket(java.lang.Long id) {
+    public RegisteredUser getRegisteredUser(java.lang.Long id) {
         return getFacade().find(id);
     }
 
-    public List<Ticket> getItemsAvailableSelectMany() {
+    public List<RegisteredUser> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Ticket> getItemsAvailableSelectOne() {
+    public List<RegisteredUser> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Ticket.class)
-    public static class TicketControllerConverter implements Converter {
+    @FacesConverter(forClass = RegisteredUser.class)
+    public static class RegisteredUserControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            TicketController controller = (TicketController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "ticketController");
-            return controller.getTicket(getKey(value));
+            RegisteredUserController controller = (RegisteredUserController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "registeredUserController");
+            return controller.getRegisteredUser(getKey(value));
         }
 
         java.lang.Long getKey(String value) {
@@ -151,11 +160,11 @@ public class TicketController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Ticket) {
-                Ticket o = (Ticket) object;
+            if (object instanceof RegisteredUser) {
+                RegisteredUser o = (RegisteredUser) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Ticket.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), RegisteredUser.class.getName()});
                 return null;
             }
         }

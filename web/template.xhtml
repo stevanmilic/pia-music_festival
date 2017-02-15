@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:head>
         <title><ui:insert name="title">Default Title</ui:insert></title>
@@ -20,6 +21,7 @@
                 <h:form id="menuForm">
                     <p:menubar>
                         <p:menuitem value="#{bundle.Home}" outcome="/index" icon="ui-icon-home"/>
+
                         <p:submenu label="#{bundle.Maintenance}">
                             <p:menuitem value="CommentEvent" outcome="/commentEvent/List.xhtml" />
                             <p:menuitem value="DetailEvent" outcome="/detailEvent/List.xhtml" />
@@ -28,6 +30,17 @@
                             <p:menuitem value="Ticket" outcome="/ticket/List.xhtml" />
                             <p:menuitem value="VideoEvent" outcome="/videoEvent/List.xhtml" />
                         </p:submenu>
+
+                        <p:menuitem value="#{bundle.Login}" onclick="PF('LoginDialog').show();" rendered="#{empty user}"/>
+
+                        <p:menuitem value="#{bundle.Register}" onclick="PF('RegisteredUserCreateDialog').show()" 
+                                    actionListener="#{registeredUserController.prepareCreate()}" update=":RegisteredUserCreateForm" 
+                                    rendered="#{empty user}"/>
+
+                        <p:menuitem value="#{bundle.ChangePassword}" onclick="PF('ChangePasswordDialog').show()" rendered="#{empty user}"/>
+
+                        <p:menuitem value="#{bundle.Logout}" actionListener="#{authenticationController.logout()}"
+                                    rendered="#{not empty user}" update=":EventListForm:datalist,:menuForm"/>
                     </p:menubar>
                 </h:form>
             </p:layoutUnit>
@@ -41,7 +54,11 @@
             </p:layoutUnit>
 
         </p:layout>
-
+        
+        <ui:include src="authentication/Login.xhtml" rendered="#{empty user}"/> 
+        <ui:include src="authentication/ChangePassword.xhtml" rendered="#{empty user}"/> 
+        <ui:include src="registeredUser/Create.xhtml" rendered="#{empty user}"/> 
+        
     </h:body>
 
 </html>

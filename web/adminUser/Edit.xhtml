@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="AdminUserEditDlg" widgetVar="AdminUserEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditAdminUserTitle}">
+            <h:form id="AdminUserEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{adminUserController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditAdminUserLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{adminUserController.selected.id}" title="#{bundle.EditAdminUserTitle_id}" />
+                        <p:outputLabel value="#{bundle.EditAdminUserLabel_name}" for="name" />
+                        <p:inputText id="name" value="#{adminUserController.selected.name}" title="#{bundle.EditAdminUserTitle_name}" required="true" requiredMessage="#{bundle.EditAdminUserRequiredMessage_name}"/>
+                        <p:outputLabel value="#{bundle.EditAdminUserLabel_surName}" for="surName" />
+                        <p:inputText id="surName" value="#{adminUserController.selected.surName}" title="#{bundle.EditAdminUserTitle_surName}" required="true" requiredMessage="#{bundle.EditAdminUserRequiredMessage_surName}"/>
+                        <p:outputLabel value="#{bundle.EditAdminUserLabel_userName}" for="userName" />
+                        <p:inputText id="userName" value="#{adminUserController.selected.userName}" title="#{bundle.EditAdminUserTitle_userName}" required="true" requiredMessage="#{bundle.EditAdminUserRequiredMessage_userName}"/>
+                        <p:outputLabel value="#{bundle.EditAdminUserLabel_password}" for="password" />
+                        <p:inputText id="password" value="#{adminUserController.selected.password}" title="#{bundle.EditAdminUserTitle_password}" required="true" requiredMessage="#{bundle.EditAdminUserRequiredMessage_password}"/>
+                        <p:outputLabel value="#{bundle.EditAdminUserLabel_contactNumber}" for="contactNumber" />
+                        <p:inputText id="contactNumber" value="#{adminUserController.selected.contactNumber}" title="#{bundle.EditAdminUserTitle_contactNumber}" required="true" requiredMessage="#{bundle.EditAdminUserRequiredMessage_contactNumber}"/>
+                        <p:outputLabel value="#{bundle.EditAdminUserLabel_email}" for="email" />
+                        <p:inputText id="email" value="#{adminUserController.selected.email}" title="#{bundle.EditAdminUserTitle_email}" required="true" requiredMessage="#{bundle.EditAdminUserRequiredMessage_email}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{adminUserController.update}" value="#{bundle.Save}" update="display,:AdminUserListForm:datalist,:growl" oncomplete="handleSubmit(args, 'AdminUserEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="AdminUserEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -25,11 +25,14 @@ public class HibernateUtil {
         try {
             // Create the SessionFactory from standard (hibernate.cfg.xml) 
             // config file;
-            StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().configure().build();
-            sessionFactory = new Configuration().configure().buildSessionFactory(standardServiceRegistry);
+            Configuration configuration = new Configuration();
+            configuration.configure("hibernate.cfg.xml");
+            StandardServiceRegistryBuilder ssrb = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
+            sessionFactory = configuration.buildSessionFactory(ssrb.build());
+            //StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().configure().build();
+            //sessionFactory = new Configuration().configure().buildSessionFactory(standardServiceRegistry);
         } catch (HibernateException ex) {
             // Log the exception. 
-            System.err.println("Initial SessionFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }

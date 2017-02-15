@@ -28,8 +28,6 @@
                         <p:inputText id="pricePerDay" value="#{eventController.selected.pricePerDay}" title="#{bundle.CreateEventTitle_pricePerDay}" required="true" requiredMessage="#{bundle.CreateEventRequiredMessage_pricePerDay}"/>
                         <p:outputLabel value="#{bundle.CreateEventLabel_priceForWhole}" for="priceForWhole" />
                         <p:inputText id="priceForWhole" value="#{eventController.selected.priceForWhole}" title="#{bundle.CreateEventTitle_priceForWhole}" required="true" requiredMessage="#{bundle.CreateEventRequiredMessage_priceForWhole}"/>
-                        <p:outputLabel value="#{bundle.CreateEventLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{eventController.selected.id}" title="#{bundle.CreateEventTitle_id}" />
                     </p:panelGrid>
                     <p:commandButton actionListener="#{eventController.create}" value="#{bundle.Save}" update="display,:EventListForm:datalist,:growl" oncomplete="handleSubmit(args,'EventCreateDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="EventCreateDialog.hide()"/>

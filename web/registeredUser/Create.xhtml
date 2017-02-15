@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="RegisteredUserCreateDlg" widgetVar="RegisteredUserCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateRegisteredUserTitle}">
+            <h:form id="RegisteredUserCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{registeredUserController.selected != null}" id="createGrid">
+                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_name}" for="name" />
+                        <p:inputText id="name" value="#{registeredUserController.selected.name}" title="#{bundle.CreateRegisteredUserTitle_name}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_name}"/>
+                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_surName}" for="surName" />
+                        <p:inputText id="surName" value="#{registeredUserController.selected.surName}" title="#{bundle.CreateRegisteredUserTitle_surName}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_surName}"/>
+                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_userName}" for="userName" />
+                        <p:inputText id="userName" value="#{registeredUserController.selected.userName}" title="#{bundle.CreateRegisteredUserTitle_userName}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_userName}"/>
+                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_password}" for="password" />
+                        <p:password id="password" value="#{registeredUserController.selected.password}" match="confirmPassword" title="#{bundle.CreateRegisteredUserTitle_password}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_password}"/>
+                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_confirmPassword}" for="confirmPassword" />
+                        <p:password id="confirmPassword" value="#{registeredUserController.confirmPassword}" title="#{bundle.CreateRegisteredUserTitle_confirmPassword}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_confirmPassword}"/>
+                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_contactNumber}" for="contactNumber" />
+                        <p:inputText id="contactNumber" value="#{registeredUserController.selected.contactNumber}" title="#{bundle.CreateRegisteredUserTitle_contactNumber}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_contactNumber}"/>
+                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_email}" for="email" />
+                        <p:inputText id="email" value="#{registeredUserController.selected.email}" title="#{bundle.CreateRegisteredUserTitle_email}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_email}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{registeredUserController.create}" value="#{bundle.Save}" update="display,:growl,createGrid" oncomplete="handleSubmit(args,'RegisteredUserCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="RegisteredUserCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

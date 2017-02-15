@@ -1,8 +1,9 @@
-package Beans;
+package Controllers;
 
 import Entities.Event;
-import Beans.util.JsfUtil;
-import Beans.util.JsfUtil.PersistAction;
+import Controllers.util.JsfUtil;
+import Controllers.util.JsfUtil.PersistAction;
+import Entities.util.HibernateUtil;
 import Utils.EventFacade;
 
 import java.io.Serializable;
@@ -29,6 +30,7 @@ public class EventController implements Serializable {
     private Event selected;
 
     public EventController() {
+        //HibernateUtil.getSessionFactory().openSession();
     }
 
     public Event getSelected() {

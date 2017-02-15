@@ -1,8 +1,8 @@
-package Beans;
+package Controllers;
 
 import Entities.CommentEvent;
-import Beans.util.JsfUtil;
-import Beans.util.JsfUtil.PersistAction;
+import Controllers.util.JsfUtil;
+import Controllers.util.JsfUtil.PersistAction;
 import Utils.CommentEventFacade;
 
 import java.io.Serializable;
