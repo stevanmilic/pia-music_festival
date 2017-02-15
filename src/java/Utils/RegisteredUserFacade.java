@@ -6,6 +6,7 @@
 package Utils;
 
 import Entities.RegisteredUser;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +28,10 @@ public class RegisteredUserFacade extends AbstractFacade<RegisteredUser> {
 
     public RegisteredUserFacade() {
         super(RegisteredUser.class);
+    }
+    
+    public List<RegisteredUser> GetLastLoggedInUsers(){
+        return em.createQuery("select ru from RegisteredUser ru order by ru.lastLogin desc").setMaxResults(10).getResultList();
     }
     
 }

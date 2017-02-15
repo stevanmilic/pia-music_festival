@@ -11,21 +11,9 @@
         <p:dialog id="RegisteredUserEditDlg" widgetVar="RegisteredUserEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditRegisteredUserTitle}">
             <h:form id="RegisteredUserEditForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{registeredUserController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditRegisteredUserLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{registeredUserController.selected.id}" title="#{bundle.EditRegisteredUserTitle_id}" />
-                        <p:outputLabel value="#{bundle.EditRegisteredUserLabel_name}" for="name" />
-                        <p:inputText id="name" value="#{registeredUserController.selected.name}" title="#{bundle.EditRegisteredUserTitle_name}" required="true" requiredMessage="#{bundle.EditRegisteredUserRequiredMessage_name}"/>
-                        <p:outputLabel value="#{bundle.EditRegisteredUserLabel_surName}" for="surName" />
-                        <p:inputText id="surName" value="#{registeredUserController.selected.surName}" title="#{bundle.EditRegisteredUserTitle_surName}" required="true" requiredMessage="#{bundle.EditRegisteredUserRequiredMessage_surName}"/>
-                        <p:outputLabel value="#{bundle.EditRegisteredUserLabel_userName}" for="userName" />
-                        <p:inputText id="userName" value="#{registeredUserController.selected.userName}" title="#{bundle.EditRegisteredUserTitle_userName}" required="true" requiredMessage="#{bundle.EditRegisteredUserRequiredMessage_userName}"/>
-                        <p:outputLabel value="#{bundle.EditRegisteredUserLabel_password}" for="password" />
-                        <p:inputText id="password" value="#{registeredUserController.selected.password}" title="#{bundle.EditRegisteredUserTitle_password}" required="true" requiredMessage="#{bundle.EditRegisteredUserRequiredMessage_password}"/>
-                        <p:outputLabel value="#{bundle.EditRegisteredUserLabel_contactNumber}" for="contactNumber" />
-                        <p:inputText id="contactNumber" value="#{registeredUserController.selected.contactNumber}" title="#{bundle.EditRegisteredUserTitle_contactNumber}" required="true" requiredMessage="#{bundle.EditRegisteredUserRequiredMessage_contactNumber}"/>
-                        <p:outputLabel value="#{bundle.EditRegisteredUserLabel_email}" for="email" />
-                        <p:inputText id="email" value="#{registeredUserController.selected.email}" title="#{bundle.EditRegisteredUserTitle_email}" required="true" requiredMessage="#{bundle.EditRegisteredUserRequiredMessage_email}"/>
+                    <p:panelGrid columns="2" rendered="#{registeredUserController.selected != null}">      
+                        <p:outputLabel value="#{bundle.EditRegisteredUserLabel_activated}" for="activated" />
+                        <p:selectBooleanCheckbox id="activated" value="#{registeredUserController.selected.activated}" />
                     </p:panelGrid>
                     <p:commandButton actionListener="#{registeredUserController.update}" value="#{bundle.Save}" update="display,:RegisteredUserListForm:datalist,:growl" oncomplete="handleSubmit(args, 'RegisteredUserEditDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="RegisteredUserEditDialog.hide()"/>

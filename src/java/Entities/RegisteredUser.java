@@ -12,22 +12,23 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+
 /**
  *
  * @author stevan
  */
 @Entity
-@Table(name="registered_user")
-@PrimaryKeyJoinColumn(name="ID")
+@Table(name = "registered_user")
+@PrimaryKeyJoinColumn(name = "ID")
 public class RegisteredUser extends User {
-    
+
     @OneToMany(mappedBy = "registeredUser")
     private List<Ticket> tickets;
-    
-    @OneToMany(mappedBy="registeredUser")
+
+    @OneToMany(mappedBy = "registeredUser")
     private List<CommentEvent> comments;
-        
-    @Column(name="activated")
+
+    @Column(name = "activated")
     private boolean activated = false;
 
     public boolean isActivated() {

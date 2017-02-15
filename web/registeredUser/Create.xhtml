@@ -18,10 +18,14 @@
                         <p:inputText id="surName" value="#{registeredUserController.selected.surName}" title="#{bundle.CreateRegisteredUserTitle_surName}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_surName}"/>
                         <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_userName}" for="userName" />
                         <p:inputText id="userName" value="#{registeredUserController.selected.userName}" title="#{bundle.CreateRegisteredUserTitle_userName}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_userName}"/>
-                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_password}" for="password" />
-                        <p:password id="password" value="#{registeredUserController.selected.password}" match="confirmPassword" title="#{bundle.CreateRegisteredUserTitle_password}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_password}"/>
+                        <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_password}" for="password"></p:outputLabel>
+                        <p:password id="password" value="#{registeredUserController.selected.password}" match="confirmPassword" title="#{bundle.CreateRegisteredUserTitle_password}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_password}">
+                            <f:validateRegex pattern="^(?=.{6,12}$)(?=.*[$@$!%*#?\d])(?=.*[A-Z])(?=.*[a-z]{3,})(([$@$!%*#?\dA-Za-z])\2?(?!\2))+$"/>
+                        </p:password>
                         <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_confirmPassword}" for="confirmPassword" />
-                        <p:password id="confirmPassword" value="#{registeredUserController.confirmPassword}" title="#{bundle.CreateRegisteredUserTitle_confirmPassword}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_confirmPassword}"/>
+                        <p:password id="confirmPassword" value="#{registeredUserController.confirmPassword}" title="#{bundle.CreateRegisteredUserTitle_confirmPassword}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_confirmPassword}">
+                            <f:validateRegex pattern="^(?=.{6,12}$)(?=.*[$@$!%*#?\d])(?=.*[A-Z])(?=.*[a-z]{3,})(([$@$!%*#?\dA-Za-z])\2?(?!\2))+$"/>
+                        </p:password>
                         <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_contactNumber}" for="contactNumber" />
                         <p:inputText id="contactNumber" value="#{registeredUserController.selected.contactNumber}" title="#{bundle.CreateRegisteredUserTitle_contactNumber}" required="true" requiredMessage="#{bundle.CreateRegisteredUserRequiredMessage_contactNumber}"/>
                         <p:outputLabel value="#{bundle.CreateRegisteredUserLabel_email}" for="email" />

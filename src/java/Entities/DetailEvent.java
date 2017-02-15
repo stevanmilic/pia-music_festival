@@ -24,29 +24,29 @@ import org.hibernate.annotations.Type;
  * @author stevan
  */
 @Entity
-@Table(name="event_detail")
+@Table(name = "event_detail")
 public class DetailEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @Column(name="performer", nullable = false)
+
+    @Column(name = "performer", nullable = false)
     private String performer;
-    
-    @Temporal(TemporalType.DATE)
-    @Column(name="start_time", nullable = false)
-    @Type(type="timestamp")
-    private Date startTime;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="end_time", nullable = false)
-    @Type(type="timestamp")
+    @Column(name = "start_time", nullable = false)
+    @Type(type = "timestamp")
+    private Date startTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "end_time", nullable = false)
+    @Type(type = "timestamp")
     private Date endTime;
-    
+
     @ManyToOne
-    @JoinColumn(name="fk_event_detail")
+    @JoinColumn(name = "fk_event_detail")
     private Event event;
 
     public Event getEvent() {
@@ -80,9 +80,7 @@ public class DetailEvent implements Serializable {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
-    
-    
-    
+
     public Long getId() {
         return id;
     }
@@ -115,5 +113,5 @@ public class DetailEvent implements Serializable {
     public String toString() {
         return "Entities.EventDetails[ id=" + id + " ]";
     }
-    
+
 }

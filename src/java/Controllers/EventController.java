@@ -20,6 +20,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
+
+//TO DO: Search this fellas!
+
 @Named("eventController")
 @SessionScoped
 public class EventController implements Serializable {

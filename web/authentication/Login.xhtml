@@ -19,8 +19,9 @@
                     <p:password id="password" value="#{authenticationController.password}" required="true" label="password" />
 
                     <f:facet name="footer">
-                        <p:commandButton value="#{bundle.Login}" update="growl,:EventListForm:datalist,:menuForm" actionListener="#{authenticationController.login()}"
+                        <p:commandButton value="#{bundle.Login}" update="growl,:menuForm" actionListener="#{authenticationController.login()}"
                                          oncomplete="handleSubmit(args, 'LoginDialog')" />
+                        <!-- update=":EventListForm:datalist," -->
                     </f:facet>  
                 </h:panelGrid>
             </p:dialog>

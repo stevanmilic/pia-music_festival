@@ -6,6 +6,7 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import org.hibernate.annotations.Type;
 
 
 /**
@@ -36,7 +40,7 @@ public class User implements Serializable {
     @Column(name="surname", nullable = false)
     private String surName;
     
-    @Column(name="username", nullable = false)
+    @Column(name="username", nullable = false, unique = true)
     private String userName;
     
     @Column(name="password", nullable = false)
@@ -47,6 +51,19 @@ public class User implements Serializable {
     
     @Column(name="email", nullable = false)
     private String email;
+    
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_login")
+    @Type(type = "timestamp")
+    private Date lastLogin;
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
+    }
 
     public Long getId() {
         return id;

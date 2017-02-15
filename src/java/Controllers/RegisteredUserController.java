@@ -89,6 +89,10 @@ public class RegisteredUserController implements Serializable {
         }
         return items;
     }
+    
+    public void setLastItems(){
+        items = getFacade().GetLastLoggedInUsers();
+    }
 
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
