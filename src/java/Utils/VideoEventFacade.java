@@ -5,7 +5,9 @@
  */
 package Utils;
 
+import Entities.Event;
 import Entities.VideoEvent;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +30,10 @@ public class VideoEventFacade extends AbstractFacade<VideoEvent> {
     public VideoEventFacade() {
         super(VideoEvent.class);
     }
-    
+
+    public List<VideoEvent> getByEvent(Event event) {
+        return em.createQuery("select ve from VideoEvent ve where ve.event = :event")
+                .setParameter("event", event).getResultList();
+    }
+
 }

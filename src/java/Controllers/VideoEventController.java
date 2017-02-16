@@ -3,6 +3,8 @@ package Controllers;
 import Entities.VideoEvent;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.Event;
+import Entities.ImageEvent;
 import Utils.VideoEventFacade;
 
 import java.io.Serializable;
@@ -14,10 +16,12 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.event.FileUploadEvent;
 
 @Named("videoEventController")
 @SessionScoped
@@ -26,17 +30,9 @@ public class VideoEventController implements Serializable {
     @EJB
     private Utils.VideoEventFacade ejbFacade;
     private List<VideoEvent> items = null;
-    private VideoEvent selected;
+    private Event eventSelected;
 
     public VideoEventController() {
-    }
-
-    public VideoEvent getSelected() {
-        return selected;
-    }
-
-    public void setSelected(VideoEvent selected) {
-        this.selected = selected;
     }
 
     protected void setEmbeddableKeys() {
@@ -49,29 +45,16 @@ public class VideoEventController implements Serializable {
         return ejbFacade;
     }
 
-    public VideoEvent prepareCreate() {
-        selected = new VideoEvent();
-        initializeEmbeddableKey();
-        return selected;
+    public void handleFileUpload(FileUploadEvent event) {
+        FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+        VideoEvent videoEvent = new VideoEvent();
+        videoEvent.setEvent(eventSelected);
+        videoEvent.setData(event.getFile().getContents());
+        persist(videoEvent, PersistAction.CREATE, message.getSummary());
     }
 
-    public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("VideoEventCreated"));
-        if (!JsfUtil.isValidationFailed()) {
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
-    }
-
-    public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("VideoEventUpdated"));
-    }
-
-    public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("VideoEventDeleted"));
-        if (!JsfUtil.isValidationFailed()) {
-            selected = null; // Remove selection
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
+    public void setEventSelected(Event event) {
+        eventSelected = event;
     }
 
     public List<VideoEvent> getItems() {
@@ -81,7 +64,7 @@ public class VideoEventController implements Serializable {
         return items;
     }
 
-    private void persist(PersistAction persistAction, String successMessage) {
+    private void persist(VideoEvent selected, PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
             try {

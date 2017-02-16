@@ -3,6 +3,7 @@ package Controllers;
 import Entities.ImageEvent;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.Event;
 import Utils.ImageEventFacade;
 
 import java.io.Serializable;
@@ -14,10 +15,12 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import org.primefaces.event.FileUploadEvent;
 
 @Named("imageEventController")
 @SessionScoped
@@ -26,17 +29,9 @@ public class ImageEventController implements Serializable {
     @EJB
     private Utils.ImageEventFacade ejbFacade;
     private List<ImageEvent> items = null;
-    private ImageEvent selected;
+    private Event eventSelected;
 
     public ImageEventController() {
-    }
-
-    public ImageEvent getSelected() {
-        return selected;
-    }
-
-    public void setSelected(ImageEvent selected) {
-        this.selected = selected;
     }
 
     protected void setEmbeddableKeys() {
@@ -49,29 +44,16 @@ public class ImageEventController implements Serializable {
         return ejbFacade;
     }
 
-    public ImageEvent prepareCreate() {
-        selected = new ImageEvent();
-        initializeEmbeddableKey();
-        return selected;
+    public void handleFileUpload(FileUploadEvent event) {
+        FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+        ImageEvent imageEvent = new ImageEvent();
+        imageEvent.setEvent(eventSelected);
+        imageEvent.setData(event.getFile().getContents());
+        persist(imageEvent, PersistAction.CREATE, message.getSummary());
     }
 
-    public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ImageEventCreated"));
-        if (!JsfUtil.isValidationFailed()) {
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
-    }
-
-    public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("ImageEventUpdated"));
-    }
-
-    public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("ImageEventDeleted"));
-        if (!JsfUtil.isValidationFailed()) {
-            selected = null; // Remove selection
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
+    public void setEventSelected(Event event) {
+        eventSelected = event;
     }
 
     public List<ImageEvent> getItems() {
@@ -81,12 +63,14 @@ public class ImageEventController implements Serializable {
         return items;
     }
 
-    private void persist(PersistAction persistAction, String successMessage) {
+    private void persist(ImageEvent selected, PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
             try {
-                if (persistAction != PersistAction.DELETE) {
+                if (persistAction == PersistAction.UPDATE) {
                     getFacade().edit(selected);
+                } else if (persistAction == PersistAction.CREATE) {
+                    getFacade().create(selected);
                 } else {
                     getFacade().remove(selected);
                 }

@@ -71,7 +71,8 @@
                         </p:column>
                         <f:facet name="footer">               
                             <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":RegisteredUserEditForm" oncomplete="PF('RegisteredUserEditDialog').show()" disabled="#{empty registeredUserController.selected}"/>                     
-                            <p:commandButton id="itemsButton" value="Last Logged in Users" actionListener="#{registeredUserController.setLastItems()}" update=":RegisteredUserListForm:datalist" />
+                            <p:commandButton id="lastItemsButton" value="Last Logged in Users" actionListener="#{registeredUserController.setLastItems()}" update=":RegisteredUserListForm:datalist" />
+                            <p:commandButton id="defaultItemsButton" value="All Users" actionListener="#{registeredUserController.setDefaultItems()}" update=":RegisteredUserListForm:datalist" />
                         </f:facet>
                     </p:dataTable>
                 </p:panel>

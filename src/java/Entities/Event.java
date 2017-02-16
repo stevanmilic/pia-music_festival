@@ -66,6 +66,50 @@ public class Event implements Serializable {
     @Column(name="rating")
     private double rating = 0;
     
+    @Column(name="link_facebook")
+    private String facebookLink;
+    
+    @Column(name="link_twitter")
+    private String twitterLink;
+    
+    @Column(name="link_instagram")
+    private String instagramLink;
+    
+    @Column(name="link_youtube")
+    private String youtubeLink;
+
+    public String getFacebookLink() {
+        return facebookLink;
+    }
+
+    public String getTwitterLink() {
+        return twitterLink;
+    }
+
+    public String getInstagramLink() {
+        return instagramLink;
+    }
+
+    public String getYoutubeLink() {
+        return youtubeLink;
+    }
+
+    public void setFacebookLink(String facebookLink) {
+        this.facebookLink = facebookLink;
+    }
+
+    public void setTwitterLink(String twitterLink) {
+        this.twitterLink = twitterLink;
+    }
+
+    public void setInstagramLink(String instagramLink) {
+        this.instagramLink = instagramLink;
+    }
+
+    public void setYoutubeLink(String youtubeLink) {
+        this.youtubeLink = youtubeLink;
+    }
+    
     @OneToMany(mappedBy="event")
     private List<CommentEvent> comments;
     

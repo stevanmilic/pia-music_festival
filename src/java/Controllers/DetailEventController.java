@@ -3,6 +3,7 @@ package Controllers;
 import Entities.DetailEvent;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.Event;
 import Utils.DetailEventFacade;
 
 import java.io.Serializable;
@@ -14,11 +15,13 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
+@ManagedBean
 @Named("detailEventController")
 @SessionScoped
 public class DetailEventController implements Serializable {
@@ -27,6 +30,7 @@ public class DetailEventController implements Serializable {
     private Utils.DetailEventFacade ejbFacade;
     private List<DetailEvent> items = null;
     private DetailEvent selected;
+    private Event eventSelected;
 
     public DetailEventController() {
     }
@@ -48,11 +52,15 @@ public class DetailEventController implements Serializable {
     private DetailEventFacade getFacade() {
         return ejbFacade;
     }
-
-    public DetailEvent prepareCreate() {
+    
+    public void setEventSelected(Event event){
+        eventSelected = event;
+    }
+    
+    public void prepareCreate(Event event) {
         selected = new DetailEvent();
+        selected.setEvent(eventSelected);
         initializeEmbeddableKey();
-        return selected;
     }
 
     public void create() {
@@ -76,7 +84,7 @@ public class DetailEventController implements Serializable {
 
     public List<DetailEvent> getItems() {
         if (items == null) {
-            items = getFacade().findAll();
+            items = getFacade().getByEvent(eventSelected);
         }
         return items;
     }
@@ -85,8 +93,10 @@ public class DetailEventController implements Serializable {
         if (selected != null) {
             setEmbeddableKeys();
             try {
-                if (persistAction != PersistAction.DELETE) {
+                if (persistAction == PersistAction.UPDATE) {
                     getFacade().edit(selected);
+                } else if (persistAction == PersistAction.CREATE) {
+                    getFacade().create(selected);
                 } else {
                     getFacade().remove(selected);
                 }

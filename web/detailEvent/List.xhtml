@@ -29,12 +29,6 @@
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListDetailEventTitle_event}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.event}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
                                 <h:outputText value="#{bundle.ListDetailEventTitle_performer}"/>
                             </f:facet>
                             <h:outputText value="#{item.performer}"/>
@@ -54,12 +48,6 @@
                             <h:outputText value="#{item.endTime}">
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                             </h:outputText>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListDetailEventTitle_id}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.id}"/>
                         </p:column>
                         <f:facet name="footer">
                             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{detailEventController.prepareCreate}" update=":DetailEventCreateForm" oncomplete="PF('DetailEventCreateDialog').show()"/>

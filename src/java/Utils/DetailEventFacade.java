@@ -6,6 +6,8 @@
 package Utils;
 
 import Entities.DetailEvent;
+import Entities.Event;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,4 +31,8 @@ public class DetailEventFacade extends AbstractFacade<DetailEvent> {
         super(DetailEvent.class);
     }
     
+    public List<DetailEvent> getByEvent(Event event){
+        return em.createQuery("select de from DetailEvent de where de.event = :event")
+                .setParameter("event", event).getResultList();
+    }
 }

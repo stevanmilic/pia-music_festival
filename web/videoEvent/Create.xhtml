@@ -10,22 +10,11 @@
 
         <p:dialog id="VideoEventCreateDlg" widgetVar="VideoEventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateVideoEventTitle}">
             <h:form id="VideoEventCreateForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{videoEventController.selected != null}">
-                        <p:outputLabel value="#{bundle.CreateVideoEventLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{videoEventController.selected.id}" title="#{bundle.CreateVideoEventTitle_id}" />
-                        <p:outputLabel value="#{bundle.CreateVideoEventLabel_event}" for="event" />
-                        <p:selectOneMenu id="event" value="#{videoEventController.selected.event}" >
-                            <f:selectItems value="#{eventController.itemsAvailableSelectOne}"
-                                           var="eventItem"
-                                           itemValue="#{eventItem}"/>
-                        </p:selectOneMenu>
-                        <p:outputLabel value="#{bundle.CreateVideoEventLabel_data}" for="data" />
-                        <p:inputTextarea rows="4" cols="30" id="data" value="#{videoEventController.selected.data}" title="#{bundle.CreateVideoEventTitle_data}" />
-                    </p:panelGrid>
-                    <p:commandButton actionListener="#{videoEventController.create}" value="#{bundle.Save}" update="display,:VideoEventListForm:datalist,:growl" oncomplete="handleSubmit(args,'VideoEventCreateDialog');"/>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="VideoEventCreateDialog.hide()"/>
-                </h:panelGroup>
+                <p:fileUpload fileUploadListener="#{videoEventController.handleFileUpload}" mode="advanced"
+                              multiple="true" update="messages" allowTypes="/(\.|\/)(avi|mov|mpeg4)$/" />
+                <p:growl id="messages" showDetail="true" />
+
+                <p:commandButton value="#{bundle.Done}" onclick="VideoEventCreateDialog.hide()"/>
             </h:form>
         </p:dialog>
 

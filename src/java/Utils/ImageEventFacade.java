@@ -5,7 +5,9 @@
  */
 package Utils;
 
+import Entities.Event;
 import Entities.ImageEvent;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +30,10 @@ public class ImageEventFacade extends AbstractFacade<ImageEvent> {
     public ImageEventFacade() {
         super(ImageEvent.class);
     }
-    
+
+    public List<ImageEvent> getByEvent(Event event) {
+        return em.createQuery("select ie from ImageEvent ie where ie.event = :event")
+                .setParameter("event", event).getResultList();
+    }
+
 }

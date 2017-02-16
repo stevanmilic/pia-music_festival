@@ -10,22 +10,14 @@
 
         <p:dialog id="ImageEventCreateDlg" widgetVar="ImageEventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateImageEventTitle}">
             <h:form id="ImageEventCreateForm">
-                <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{imageEventController.selected != null}">
-                        <p:outputLabel value="#{bundle.CreateImageEventLabel_event}" for="event" />
-                        <p:selectOneMenu id="event" value="#{imageEventController.selected.event}" >
-                            <f:selectItems value="#{eventController.itemsAvailableSelectOne}"
-                                           var="eventItem"
-                                           itemValue="#{eventItem}"/>
-                        </p:selectOneMenu>
-                        <p:outputLabel value="#{bundle.CreateImageEventLabel_data}" for="data" />
-                        <p:inputTextarea rows="4" cols="30" id="data" value="#{imageEventController.selected.data}" title="#{bundle.CreateImageEventTitle_data}" />
-                        <p:outputLabel value="#{bundle.CreateImageEventLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{imageEventController.selected.id}" title="#{bundle.CreateImageEventTitle_id}" />
-                    </p:panelGrid>
-                    <p:commandButton actionListener="#{imageEventController.create}" value="#{bundle.Save}" update="display,:ImageEventListForm:datalist,:growl" oncomplete="handleSubmit(args,'ImageEventCreateDialog');"/>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="ImageEventCreateDialog.hide()"/>
-                </h:panelGroup>
+                <p:fileUpload fileUploadListener="#{imageEventController.handleFileUpload}" mode="advanced"
+                              multiple="true" update="messages" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+
+                <p:growl id="messages" showDetail="true" />
+
+                <p:commandButton action="#{videoEventController.setEventSelected(eventController.selected)}" value="#{bundle.Next}" update=":VideoEventCreateForm,:growl" oncomplete="handleSubmit(args,'ImageEventCreateDialog');PF('VideoEventCreateDialog').show();"/>
+                <p:commandButton value="#{bundle.Done}" onclick="ImageEventCreateDialog.hide()"/>
+
             </h:form>
         </p:dialog>
 

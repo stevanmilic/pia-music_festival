@@ -90,6 +90,10 @@ public class RegisteredUserController implements Serializable {
         return items;
     }
     
+    public void setDefaultItems(){
+        items = getFacade().findAll();
+    }
+    
     public void setLastItems(){
         items = getFacade().getLastLoggedInUsers();
     }

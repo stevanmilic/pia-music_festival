@@ -23,12 +23,8 @@
                         <p:menuitem value="#{bundle.Home}" outcome="/event/List.xhtml" icon="ui-icon-home"/>
 
                         <p:submenu label="#{bundle.Maintenance}">
-                            <p:menuitem value="CommentEvent" outcome="/commentEvent/List.xhtml" />
-                            <p:menuitem value="DetailEvent" outcome="/detailEvent/List.xhtml" />
                             <p:menuitem value="Event" outcome="/event/List.xhtml" />
-                            <p:menuitem value="ImageEvent" outcome="/imageEvent/List.xhtml" />
-                            <p:menuitem value="Ticket" outcome="/ticket/List.xhtml" />
-                            <p:menuitem value="VideoEvent" outcome="/videoEvent/List.xhtml" />
+                            <p:menuitem value="Ticket" outcome="/ticket/List.xhtml" rendered="#{not empty user}"/>
                             <p:menuitem value="RegisteredUser" outcome="/registeredUser/List.xhtml" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
                         </p:submenu>
 

@@ -40,7 +40,10 @@
                         <p:outputLabel value="#{bundle.CreateEventLabel_priceForWhole}" for="priceForWhole" />
                         <p:inputText id="priceForWhole" value="#{eventController.selected.priceForWhole}" title="#{bundle.CreateEventTitle_priceForWhole}" required="true" requiredMessage="#{bundle.CreateEventRequiredMessage_priceForWhole}"/>
                     </p:panelGrid>
-                    <p:commandButton actionListener="#{eventController.create}" value="#{bundle.Save}" update="display,:EventListForm:datalist,:growl" oncomplete="handleSubmit(args,'EventCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Next}" actionListener="#{eventController.create}" update="display,:growl,:DetailEventCreateForm" oncomplete="handleSubmit(args,'EventCreateDialog');PF('DetailEventCreateDialog').show();">
+                        <f:actionListener binding="#{detailEventController.setEventSelected(eventController.selected)}"/>
+                        <f:actionListener binding="#{detailEventController.create()}"/>
+                    </p:commandButton>
                     <p:commandButton value="#{bundle.Cancel}" onclick="EventCreateDialog.hide()"/>
                 </h:panelGroup>
             </h:form>

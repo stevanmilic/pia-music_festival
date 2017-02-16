@@ -20,8 +20,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.servlet.http.HttpSession;
 
-//TO DO: Search this fellas!
 @Named("eventController")
 @SessionScoped
 public class EventController implements Serializable {
@@ -31,6 +31,9 @@ public class EventController implements Serializable {
     private List<Event> items = null;
     private List<Event> filteredItems = null;
     private Event selected;
+    private boolean initialized = false;
+
+    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 
     public EventController() {
         //HibernateUtil.getSessionFactory().openSession();
@@ -108,19 +111,30 @@ public class EventController implements Serializable {
         if (items == null) {
             items = getFacade().findAll();
         }
+        if (!initialized && session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            items = getFacade().getMostRecentEvents();
+            initialized = true;
+        }
         return items;
     }
 
+    public void setDefaultItems() {
+        items = getFacade().findAll();
+    }
+
     public void setTopRatedItems() {
-        filteredItems = getFacade().getTopRatedEvents();
+        items = getFacade().getTopRatedEvents();
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
         if (selected != null) {
             setEmbeddableKeys();
             try {
-                if (persistAction != PersistAction.DELETE) {
+                if (persistAction == PersistAction.UPDATE) {
                     getFacade().edit(selected);
+                } else if (persistAction == PersistAction.CREATE) {
+                    getFacade().create(selected);
                 } else {
                     getFacade().remove(selected);
                 }
