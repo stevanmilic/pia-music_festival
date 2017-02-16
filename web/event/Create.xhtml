@@ -42,7 +42,7 @@
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Next}" actionListener="#{eventController.create}" update="display,:growl,:DetailEventCreateForm" oncomplete="handleSubmit(args,'EventCreateDialog');PF('DetailEventCreateDialog').show();">
                         <f:actionListener binding="#{detailEventController.setEventSelected(eventController.selected)}"/>
-                        <f:actionListener binding="#{detailEventController.create()}"/>
+                        <f:actionListener binding="#{detailEventController.prepareCreate()}"/>
                     </p:commandButton>
                     <p:commandButton value="#{bundle.Cancel}" onclick="EventCreateDialog.hide()"/>
                 </h:panelGroup>

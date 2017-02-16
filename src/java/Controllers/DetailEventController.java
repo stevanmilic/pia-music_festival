@@ -57,7 +57,7 @@ public class DetailEventController implements Serializable {
         eventSelected = event;
     }
     
-    public void prepareCreate(Event event) {
+    public void prepareCreate() {
         selected = new DetailEvent();
         selected.setEvent(eventSelected);
         initializeEmbeddableKey();
