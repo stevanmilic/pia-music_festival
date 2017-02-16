@@ -35,7 +35,7 @@ public class EventFacade extends AbstractFacade<Event> {
         return em.createQuery("select e from Event e order by e.rating desc").setMaxResults(5).getResultList();
     }
     
-    public List<Event> getMostRecentEvents(){
+    public List<Event> getRecentEvents(){
         Query query = em.createNativeQuery("SELECT * FROM event WHERE NOW() < end_date ORDER BY ABS(DATEDIFF(start_date, NOW())) LIMIT 5", Event.class);
         return query.getResultList();
     }

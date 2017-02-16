@@ -113,7 +113,7 @@ public class EventController implements Serializable {
         }
         if (!initialized && session.getAttribute("user") != null
                 && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
-            items = getFacade().getMostRecentEvents();
+            items = getFacade().getRecentEvents();
             initialized = true;
         }
         return items;
@@ -125,6 +125,10 @@ public class EventController implements Serializable {
 
     public void setTopRatedItems() {
         items = getFacade().getTopRatedEvents();
+    }
+    
+    public void setRecentEvents(){
+        items = getFacade().getRecentEvents();
     }
 
     private void persist(PersistAction persistAction, String successMessage) {

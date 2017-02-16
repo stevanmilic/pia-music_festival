@@ -12,19 +12,17 @@
             <h:form id="DetailEventEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{detailEventController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditDetailEventLabel_event}" for="event" />
-                        <p:selectOneMenu id="event" value="#{detailEventController.selected.event}" >
-                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{eventController.itemsAvailableSelectOne}"
-                                           var="eventItem"
-                                           itemValue="#{eventItem}"/>
-                        </p:selectOneMenu>
                         <p:outputLabel value="#{bundle.EditDetailEventLabel_performer}" for="performer" />
                         <p:inputText id="performer" value="#{detailEventController.selected.performer}" title="#{bundle.EditDetailEventTitle_performer}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_performer}"/>
+
                         <p:outputLabel value="#{bundle.EditDetailEventLabel_startTime}" for="startTime" />
-                        <p:calendar id="startTime" pattern="dd/MM/yyyy" value="#{detailEventController.selected.startTime}" title="#{bundle.EditDetailEventTitle_startTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_startTime}" showOn="button"/>
+                        <p:calendar id="startTime" pattern="dd/MM/yyyy HH:MM:ss a" value="#{detailEventController.selected.startTime}" title="#{bundle.EditDetailEventTitle_startTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_startTime}">
+                            <p:ajax event="dateSelect" update="endTime"/>
+                        </p:calendar>
                         <p:outputLabel value="#{bundle.EditDetailEventLabel_endTime}" for="endTime" />
-                        <p:calendar id="endTime" pattern="dd/MM/yyyy HH:mm:ss" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}"  showOn="button"/>
+                        <p:calendar id="endTime" pattern="dd/MM/yyyy HH:mm:ss a" disabled="#{empty eventController.selected.startDate}" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}">
+                            <p:ajax event="dateSelect" update="startTime"/>
+                        </p:calendar>
                         <p:outputLabel value="#{bundle.EditDetailEventLabel_id}" for="id" />
                         <p:inputText id="id" value="#{detailEventController.selected.id}" title="#{bundle.EditDetailEventTitle_id}" />
                     </p:panelGrid>

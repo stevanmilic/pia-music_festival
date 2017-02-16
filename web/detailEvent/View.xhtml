@@ -12,8 +12,6 @@
             <h:form id="DetailEventViewForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{detailEventController.selected != null}">
-                        <h:outputText value="#{bundle.ViewDetailEventLabel_event}"/>
-                        <h:outputText value="#{detailEventController.selected.event}" title="#{bundle.ViewDetailEventTitle_event}"/>
                         <h:outputText value="#{bundle.ViewDetailEventLabel_performer}"/>
                         <h:outputText value="#{detailEventController.selected.performer}" title="#{bundle.ViewDetailEventTitle_performer}"/>
                         <h:outputText value="#{bundle.ViewDetailEventLabel_startTime}"/>
@@ -24,10 +22,8 @@
                         <h:outputText value="#{detailEventController.selected.endTime}" title="#{bundle.ViewDetailEventTitle_endTime}">
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                         </h:outputText>
-                        <h:outputText value="#{bundle.ViewDetailEventLabel_id}"/>
-                        <h:outputText value="#{detailEventController.selected.id}" title="#{bundle.ViewDetailEventTitle_id}"/>
+                        <p:commandButton value="#{bundle.Close}" onclick="DetailEventViewDialog.hide()"/>
                     </p:panelGrid>
-                    <p:commandButton value="#{bundle.Close}" onclick="DetailEventViewDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

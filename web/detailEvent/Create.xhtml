@@ -14,21 +14,24 @@
                     <p:panelGrid columns="2" rendered="#{detailEventController.selected != null}">
                         <p:outputLabel value="#{bundle.CreateDetailEventLabel_performer}" for="performer" />
                         <p:inputText id="performer" value="#{detailEventController.selected.performer}" title="#{bundle.CreateDetailEventTitle_performer}" required="true" requiredMessage="#{bundle.CreateDetailEventRequiredMessage_performer}"/>
-                        
+
                         <p:outputLabel value="#{bundle.CreateDetailEventLabel_startTime}" for="startTime" />
                         <p:calendar id="startTime" pattern="dd/MM/yyyy HH:mm:ss a" value="#{detailEventController.selected.startTime}" title="#{bundle.EditDetailEventTitle_startTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_startTime}">
                             <p:ajax event="dateSelect" update="endTime"/>
                         </p:calendar>
-                        
+
                         <p:outputLabel value="#{bundle.CreateDetailEventLabel_endTime}" for="endTime" />
                         <p:calendar id="endTime" pattern="dd/MM/yyyy HH:mm:ss a" disabled="#{empty detailEventController.selected.startTime}" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_endTime}">
                             <p:ajax event="dateSelect" update="startTime"/>
                         </p:calendar>
                     </p:panelGrid>
-                    <p:commandButton action="#{detailEventController.create}" value="#{bundle.Next}" update="display,:ImageEventCreateForm,:growl" oncomplete="handleSubmit(args,'DetailEventCreateDialog');PF('ImageEventCreateDialog').show();">
+                    <p:commandButton  rendered="#{empty detailPage}" action="#{detailEventController.create}" value="#{bundle.Next}" update="display,:growl" oncomplete="handleSubmit(args,'DetailEventCreateDialog');PF('ImageEventCreateDialog').show();">
                         <f:actionListener binding="#{imageEventController.setEventSelected(eventController.selected)}"/>
                     </p:commandButton>
-                    <p:commandButton value="#{bundle.Done}" onclick="DetailEventCreateDialog.hide()"/>
+                    <p:commandButton  rendered="#{not empty detailPage}" action="#{detailEventController.create}" value="#{bundle.Create}" update="display,:growl,:DetailEventListForm:datalist" oncomplete="handleSubmit(args,'DetailEventCreateDialog');">
+                        <f:actionListener binding="#{imageEventController.setEventSelected(eventController.selected)}"/>
+                    </p:commandButton>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="DetailEventCreateDialog.hide()" immediate="true"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
