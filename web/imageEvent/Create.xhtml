@@ -15,8 +15,9 @@
 
                 <p:growl id="messages" showDetail="true" />
 
-                <p:commandButton action="#{videoEventController.setEventSelected(eventController.selected)}" value="#{bundle.Next}" update=":VideoEventCreateForm,:growl" oncomplete="handleSubmit(args,'ImageEventCreateDialog');PF('VideoEventCreateDialog').show();"/>
-                <p:commandButton value="#{bundle.Done}" onclick="ImageEventCreateDialog.hide()"/>
+                <p:commandButton rendered="#{empty imagePage}" action="#{videoEventController.setEventSelected(eventController.selected)}" value="#{bundle.Next}" update=":growl" oncomplete="handleSubmit(args,'ImageEventCreateDialog');PF('VideoEventCreateDialog').show();"/>       
+                <p:commandButton rendered="#{empty imagePage}" value="#{bundle.Done}" onclick="ImageEventCreateDialog.hide()"/>
+                <p:commandButton rendered="#{not empty imagePage}" value="#{bundle.Create}" onclick="ImageEventCreateDialog.hide()" update=":growl,:ImageEventListForm:datalist"/>
 
             </h:form>
         </p:dialog>

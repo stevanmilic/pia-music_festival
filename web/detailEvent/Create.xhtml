@@ -28,9 +28,7 @@
                     <p:commandButton  rendered="#{empty detailPage}" action="#{detailEventController.create}" value="#{bundle.Next}" update="display,:growl" oncomplete="handleSubmit(args,'DetailEventCreateDialog');PF('ImageEventCreateDialog').show();">
                         <f:actionListener binding="#{imageEventController.setEventSelected(eventController.selected)}"/>
                     </p:commandButton>
-                    <p:commandButton  rendered="#{not empty detailPage}" action="#{detailEventController.create}" value="#{bundle.Create}" update="display,:growl,:DetailEventListForm:datalist" oncomplete="handleSubmit(args,'DetailEventCreateDialog');">
-                        <f:actionListener binding="#{imageEventController.setEventSelected(eventController.selected)}"/>
-                    </p:commandButton>
+                    <p:commandButton  rendered="#{not empty detailPage}" action="#{detailEventController.create}" value="#{bundle.Create}" update="display,:growl,:DetailEventListForm:datalist" oncomplete="handleSubmit(args,'DetailEventCreateDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="DetailEventCreateDialog.hide()" immediate="true"/>
                 </h:panelGroup>
             </h:form>

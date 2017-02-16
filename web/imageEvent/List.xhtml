@@ -13,6 +13,8 @@
             <h:outputText value="#{bundle.ListImageEventTitle}"></h:outputText>
         </ui:define>
 
+        <ui:param name="imagePage" value="true" />
+
         <ui:define name="body">
             <h:form id="ImageEventListForm">
                 <p:panel header="#{bundle.ListImageEventTitle}">
@@ -24,31 +26,17 @@
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowSelect"   update="createButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton deleteButton"/>
 
                         <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListImageEventTitle_event}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.event}"/>
+                            <p:graphicImage value="#{imageEventController.image}">
+                                <f:param name="itemId" value="#{item.id}"/>
+                            </p:graphicImage>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListImageEventTitle_data}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.data}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListImageEventTitle_id}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.id}"/>
-                        </p:column>
+
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{imageEventController.prepareCreate}" update=":ImageEventCreateForm" oncomplete="PF('ImageEventCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":ImageEventViewForm" oncomplete="PF('ImageEventViewDialog').show()" disabled="#{empty imageEventController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ImageEventEditForm" oncomplete="PF('ImageEventEditDialog').show()" disabled="#{empty imageEventController.selected}"/>
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" update=":ImageEventCreateForm" oncomplete="PF('ImageEventCreateDialog').show()"/>
                             <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{imageEventController.destroy}" update=":growl,datalist" disabled="#{empty imageEventController.selected}"/>
                         </f:facet>
                     </p:dataTable>

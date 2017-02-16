@@ -5,6 +5,8 @@ import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
 import Entities.Event;
 import Utils.ImageEventFacade;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,7 +22,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.event.PhaseId;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 @Named("imageEventController")
 @SessionScoped
@@ -30,8 +35,17 @@ public class ImageEventController implements Serializable {
     private Utils.ImageEventFacade ejbFacade;
     private List<ImageEvent> items = null;
     private Event eventSelected;
+    private ImageEvent selected;
 
     public ImageEventController() {
+    }
+
+    public void setSelected(ImageEvent selected) {
+        this.selected = selected;
+    }
+
+    public ImageEvent getSelected() {
+        return selected;
     }
 
     protected void setEmbeddableKeys() {
@@ -44,12 +58,27 @@ public class ImageEventController implements Serializable {
         return ejbFacade;
     }
 
+    public StreamedContent getImage() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } else {
+            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+            String itemId = context.getExternalContext().getRequestParameterMap().get("itemId");
+            ImageEvent imageEvent = getFacade().find(Long.valueOf(itemId));
+            return new DefaultStreamedContent(new ByteArrayInputStream(imageEvent.getData()));
+        }
+    }
+
     public void handleFileUpload(FileUploadEvent event) {
         FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
         ImageEvent imageEvent = new ImageEvent();
         imageEvent.setEvent(eventSelected);
         imageEvent.setData(event.getFile().getContents());
         persist(imageEvent, PersistAction.CREATE, message.getSummary());
+        items = null;
     }
 
     public void setEventSelected(Event event) {
@@ -58,9 +87,17 @@ public class ImageEventController implements Serializable {
 
     public List<ImageEvent> getItems() {
         if (items == null) {
-            items = getFacade().findAll();
+            items = getFacade().getByEvent(eventSelected);
         }
         return items;
+    }
+
+    public void destroy() {
+        persist(selected, PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("EventDeleted"));
+        if (!JsfUtil.isValidationFailed()) {
+            selected = null; // Remove selection
+            items = null;    // Invalidate list of items to trigger re-query.
+        }
     }
 
     private void persist(ImageEvent selected, PersistAction persistAction, String successMessage) {
