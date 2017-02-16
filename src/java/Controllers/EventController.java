@@ -8,6 +8,7 @@ import Utils.EventFacade;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,9 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-
 //TO DO: Search this fellas!
-
 @Named("eventController")
 @SessionScoped
 public class EventController implements Serializable {
@@ -30,10 +29,36 @@ public class EventController implements Serializable {
     @EJB
     private Utils.EventFacade ejbFacade;
     private List<Event> items = null;
+    private List<Event> filteredItems = null;
     private Event selected;
 
     public EventController() {
         //HibernateUtil.getSessionFactory().openSession();
+    }
+
+    public List<Event> getFilteredItems() {
+        return filteredItems;
+    }
+
+    public void setItems(List<Event> items) {
+        this.items = items;
+    }
+
+    public boolean filterByPrice(Object value, Object filter, Locale locale) {
+        String filterText = (filter == null) ? null : filter.toString().trim();
+        if (filterText == null || filterText.equals("")) {
+            return true;
+        }
+
+        if (value == null) {
+            return false;
+        }
+
+        return ((Comparable) value).compareTo(Integer.valueOf(filterText)) > 0;
+    }
+
+    public void setFilteredItems(List<Event> filteredItems) {
+        this.filteredItems = filteredItems;
     }
 
     public Event getSelected() {
@@ -84,6 +109,10 @@ public class EventController implements Serializable {
             items = getFacade().findAll();
         }
         return items;
+    }
+
+    public void setTopRatedItems() {
+        filteredItems = getFacade().getTopRatedEvents();
     }
 
     private void persist(PersistAction persistAction, String successMessage) {

@@ -63,6 +63,9 @@ public class Event implements Serializable {
     @Column(name="visit_count")
     private int visitCount = 0;
     
+    @Column(name="rating")
+    private double rating = 0;
+    
     @OneToMany(mappedBy="event")
     private List<CommentEvent> comments;
     
@@ -77,6 +80,14 @@ public class Event implements Serializable {
     
     @OneToMany(mappedBy = "event")
     private List<Ticket> tickets;
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
 
     public int getVisitCount() {
         return visitCount;

@@ -22,57 +22,58 @@
                                  rowKey="#{item.id}"
                                  rows="10"
                                  rowsPerPageTemplate="10,20,30,40,50"
+                                 filteredValue="#{eventController.filteredItems}"
+                                 widgetVar="eventsTable"
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
                         <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
 
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListEventTitle_name}"/>
-                            </f:facet>
+                        <p:column filterBy="#{item.name}" headerText="#{bundle.ListEventTitle_name}" filterMatchMode="contains">
                             <h:outputText value="#{item.name}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListEventTitle_place}"/>
-                            </f:facet>
+
+                        <p:column filterBy="#{item.place}" headerText="#{bundle.ListEventTitle_place}">
                             <h:outputText value="#{item.place}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListEventTitle_startDate}"/>
+
+                        <p:column filterBy="#{item.startDate}" headerText="#{bundle.ListEventTitle_startDate}" filterMatchMode="gte">
+                            <f:facet name="filter">
+                                <p:calendar pattern="dd/MM/yyyy">
+                                    <p:ajax event="dateSelect" oncomplete="PF('eventsTable').filter()"/>
+                                </p:calendar>
                             </f:facet>
                             <h:outputText value="#{item.startDate}">
-                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListEventTitle_endDate}"/>
+
+                        <p:column filterBy="#{item.endDate}" headerText="#{bundle.ListEventTitle_endDate}" filterMatchMode="lte">
+                            <f:facet name="filter">
+                                <p:calendar pattern="dd/MM/yyyy">
+                                    <p:ajax event="dateSelect" oncomplete="PF('eventsTable').filter()"/>
+                                </p:calendar>
                             </f:facet>
                             <h:outputText value="#{item.endDate}">
-                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                                <f:convertDateTime pattern="dd/MM/yyyy" />
                             </h:outputText>
-                        </p:column>
-                        <p:column rendered="#{not empty user}">
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListEventTitle_pricePerDay}"/>
-                            </f:facet>
+                        </p:column>       
+
+                        <p:column rendered="#{not empty user}" filterBy="#{item.pricePerDay}" headerText="Min #{bundle.ListEventTitle_pricePerDay}" filterFunction="#{eventController.filterByPrice}">
                             <h:outputText value="#{item.pricePerDay}"/>
                         </p:column>
-                        <p:column rendered="#{not empty user}">
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListEventTitle_priceForWhole}"/>
-                            </f:facet>
+
+                        <p:column rendered="#{not empty user}" filterBy="#{item.priceForWhole}"  headerText="Min #{bundle.ListEventTitle_priceForWhole}" filterFunction="#{eventController.filterByPrice}">
                             <h:outputText value="#{item.priceForWhole}"/>
                         </p:column>
+
                         <f:facet name="footer">
                             <p:commandButton id="createButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{eventController.prepareCreate}" update=":EventCreateForm" oncomplete="PF('EventCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   rendered="#{not empty user}" icon="ui-icon-search" value="#{bundle.View}" update=":EventViewForm" oncomplete="PF('EventViewDialog').show()" disabled="#{empty eventController.selected}"/>
                             <p:commandButton id="editButton"   rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventEditForm" oncomplete="PF('EventEditDialog').show()" disabled="#{empty eventController.selected}"/>
                             <p:commandButton id="deleteButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{eventController.destroy}" update=":growl,datalist" disabled="#{empty eventController.selected}"/>
+                            <p:commandButton id="sortByRatingButton" value="Sort By Rating" actionListener="#{eventController.setTopRatedItems()}" update=":EventListForm:datalist" />
                         </f:facet>
                     </p:dataTable>
                 </p:panel>

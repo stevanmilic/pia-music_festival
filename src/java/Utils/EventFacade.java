@@ -6,6 +6,7 @@
 package Utils;
 
 import Entities.Event;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +28,10 @@ public class EventFacade extends AbstractFacade<Event> {
 
     public EventFacade() {
         super(Event.class);
+    }
+    
+    public List<Event> getTopRatedEvents(){
+        return em.createQuery("select e from Event e order by e.rating desc").setMaxResults(5).getResultList();
     }
     
 }

@@ -22,11 +22,11 @@
                         <h:outputText value="#{eventController.selected.name}" title="#{bundle.ViewEventTitle_name}"/>
                         <h:outputText value="#{bundle.ViewEventLabel_startDate}"/>
                         <h:outputText value="#{eventController.selected.startDate}" title="#{bundle.ViewEventTitle_startDate}">
-                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                         <h:outputText value="#{bundle.ViewEventLabel_endDate}"/>
                         <h:outputText value="#{eventController.selected.endDate}" title="#{bundle.ViewEventTitle_endDate}">
-                            <f:convertDateTime pattern="MM/dd/yyyy" />
+                            <f:convertDateTime pattern="dd/MM/yyyy" />
                         </h:outputText>
                         <h:outputText value="#{bundle.ViewEventLabel_pricePerDay}"/>
                         <h:outputText value="#{eventController.selected.pricePerDay}" title="#{bundle.ViewEventTitle_pricePerDay}"/>

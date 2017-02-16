@@ -21,9 +21,9 @@
                         <p:outputLabel value="#{bundle.CreateDetailEventLabel_performer}" for="performer" />
                         <p:inputText id="performer" value="#{detailEventController.selected.performer}" title="#{bundle.CreateDetailEventTitle_performer}" required="true" requiredMessage="#{bundle.CreateDetailEventRequiredMessage_performer}"/>
                         <p:outputLabel value="#{bundle.CreateDetailEventLabel_startTime}" for="startTime" />
-                        <p:calendar id="startTime" pattern="MM/dd/yyyy" value="#{detailEventController.selected.startTime}" title="#{bundle.EditDetailEventTitle_startTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_startTime}" showOn="button"/>
+                        <p:calendar id="startTime" pattern="dd/MM/yyyy" value="#{detailEventController.selected.startTime}" title="#{bundle.EditDetailEventTitle_startTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_startTime}" showOn="button"/>
                         <p:outputLabel value="#{bundle.CreateDetailEventLabel_endTime}" for="endTime" />
-                        <p:calendar id="endTime" pattern="MM/dd/yyyy HH:mm:ss" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}"  showOn="button"/>
+                        <p:calendar id="endTime" pattern="dd/MM/yyyy HH:mm:ss" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}"  showOn="button"/>
                         <p:outputLabel value="#{bundle.CreateDetailEventLabel_id}" for="id" />
                         <p:inputText id="id" value="#{detailEventController.selected.id}" title="#{bundle.CreateDetailEventTitle_id}" />
                     </p:panelGrid>

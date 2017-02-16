@@ -25,7 +25,7 @@
                                            itemValue="#{eventItem}"/>
                         </p:selectOneMenu>
                         <p:outputLabel value="#{bundle.CreateTicketLabel_timestamp}" for="timestamp" />
-                        <p:calendar id="timestamp" pattern="MM/dd/yyyy HH:mm:ss" value="#{ticketController.selected.timestamp}" title="#{bundle.EditTicketTitle_timestamp}" required="true" requiredMessage="#{bundle.EditTicketRequiredMessage_timestamp}" showOn="button"/>
+                        <p:calendar id="timestamp" pattern="dd/MM/yyyy HH:mm:ss" value="#{ticketController.selected.timestamp}" title="#{bundle.EditTicketTitle_timestamp}" required="true" requiredMessage="#{bundle.EditTicketRequiredMessage_timestamp}" showOn="button"/>
                         <p:outputLabel value="#{bundle.CreateTicketLabel_id}" for="id" />
                         <p:inputText id="id" value="#{ticketController.selected.id}" title="#{bundle.CreateTicketTitle_id}" />
                     </p:panelGrid>

@@ -8,7 +8,6 @@ package Controllers;
 import Controllers.util.JsfUtil;
 import Entities.RegisteredUser;
 import Entities.User;
-import Entities.util.HibernateUtil;
 import java.io.IOException;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -78,6 +77,7 @@ public class AuthenticationController implements Serializable {
                     errorMessage = "This user is not approved.";
                     break;
                 }
+                errorMessage = null;
                 user.setLastLogin(new Date());
                 ejbFacade.edit(user);
                 session.setAttribute("user", user);

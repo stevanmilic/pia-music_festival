@@ -30,7 +30,7 @@ public class RegisteredUserFacade extends AbstractFacade<RegisteredUser> {
         super(RegisteredUser.class);
     }
     
-    public List<RegisteredUser> GetLastLoggedInUsers(){
+    public List<RegisteredUser> getLastLoggedInUsers(){
         return em.createQuery("select ru from RegisteredUser ru order by ru.lastLogin desc").setMaxResults(10).getResultList();
     }
     

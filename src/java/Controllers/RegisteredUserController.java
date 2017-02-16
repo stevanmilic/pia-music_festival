@@ -91,7 +91,7 @@ public class RegisteredUserController implements Serializable {
     }
     
     public void setLastItems(){
-        items = getFacade().GetLastLoggedInUsers();
+        items = getFacade().getLastLoggedInUsers();
     }
 
     private void persist(PersistAction persistAction, String successMessage) {
