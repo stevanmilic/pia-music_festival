@@ -22,21 +22,22 @@
                                  selectionMode="single" selection="#{imageEventController.selected}"
                                  paginator="true"
                                  rowKey="#{item.id}"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 rows="1"
+                                 rowsPerPageTemplate="1,10,20,30,40,50"
+                                 style="margin: 0 auto;width: 500px"
                                  >
 
                         <p:ajax event="rowSelect"   update="createButton deleteButton"/>
                         <p:ajax event="rowUnselect" update="createButton deleteButton"/>
 
-                        <p:column>
-                            <p:graphicImage value="#{imageEventController.image}">
+                        <p:column style="text-align: center;">
+                            <p:graphicImage value="#{imageEventController.image}" width="auto" height="auto">
                                 <f:param name="itemId" value="#{item.id}"/>
                             </p:graphicImage>
                         </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" update=":ImageEventCreateForm" oncomplete="PF('ImageEventCreateDialog').show()"/>
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" oncomplete="PF('ImageEventCreateDialog').show()"/>
                             <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{imageEventController.destroy}" update=":growl,datalist" disabled="#{empty imageEventController.selected}"/>
                         </f:facet>
                     </p:dataTable>

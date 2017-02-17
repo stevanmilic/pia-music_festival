@@ -13,6 +13,8 @@
             <h:outputText value="#{bundle.ListVideoEventTitle}"></h:outputText>
         </ui:define>
 
+        <ui:param name="videoPage" value="true" />
+
         <ui:define name="body">
             <h:form id="VideoEventListForm">
                 <p:panel header="#{bundle.ListVideoEventTitle}">
@@ -20,35 +22,23 @@
                                  selectionMode="single" selection="#{videoEventController.selected}"
                                  paginator="true"
                                  rowKey="#{item.id}"
-                                 rows="10"
-                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 rowsPerPageTemplate="1,10,20,30,40,50"
+                                 rows="1"
+                                 style="width:400px; margin: 0 auto;"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowSelect"   update="createButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="createButton deleteButton"/>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListVideoEventTitle_id}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.id}"/>
+                        <p:column style="text-align: center">
+                            <p:media value="#{videoEventController.video}" width="300" height="300" player="flash">
+                                <f:param name="itemId" value="#{item.id}"/>
+                            </p:media>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListVideoEventTitle_event}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.event}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListVideoEventTitle_data}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.data}"/>
-                        </p:column>
+
+
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{videoEventController.prepareCreate}" update=":VideoEventCreateForm" oncomplete="PF('VideoEventCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":VideoEventViewForm" oncomplete="PF('VideoEventViewDialog').show()" disabled="#{empty videoEventController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":VideoEventEditForm" oncomplete="PF('VideoEventEditDialog').show()" disabled="#{empty videoEventController.selected}"/>
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" oncomplete="PF('VideoEventCreateDialog').show()"/>
                             <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{videoEventController.destroy}" update=":growl,datalist" disabled="#{empty videoEventController.selected}"/>
                         </f:facet>
                     </p:dataTable>
@@ -56,8 +46,6 @@
             </h:form>
 
             <ui:include src="Create.xhtml"/>
-            <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
 

@@ -6,6 +6,8 @@ import Controllers.util.JsfUtil.PersistAction;
 import Entities.Event;
 import Entities.ImageEvent;
 import Utils.VideoEventFacade;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,7 +23,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.faces.event.PhaseId;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 @Named("videoEventController")
 @SessionScoped
@@ -31,7 +36,16 @@ public class VideoEventController implements Serializable {
     private Utils.VideoEventFacade ejbFacade;
     private List<VideoEvent> items = null;
     private Event eventSelected;
+    private VideoEvent selected;
 
+    public VideoEvent getSelected() {
+        return selected;
+    }
+
+    public void setSelected(VideoEvent selected) {
+        this.selected = selected;
+    }
+    
     public VideoEventController() {
     }
 
@@ -45,12 +59,27 @@ public class VideoEventController implements Serializable {
         return ejbFacade;
     }
 
+    public StreamedContent getVideo() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the HTML. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } else {
+            // So, browser is requesting the video. Return a real StreamedContent with the video bytes.
+            String itemId = context.getExternalContext().getRequestParameterMap().get("itemId");
+            VideoEvent videoEvent = getFacade().find(Long.valueOf(itemId));
+            return new DefaultStreamedContent(new ByteArrayInputStream(videoEvent.getData()), "video/flash");
+        }
+    }
+
     public void handleFileUpload(FileUploadEvent event) {
         FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
         VideoEvent videoEvent = new VideoEvent();
         videoEvent.setEvent(eventSelected);
         videoEvent.setData(event.getFile().getContents());
         persist(videoEvent, PersistAction.CREATE, message.getSummary());
+        items = null;
     }
 
     public void setEventSelected(Event event) {
@@ -59,9 +88,17 @@ public class VideoEventController implements Serializable {
 
     public List<VideoEvent> getItems() {
         if (items == null) {
-            items = getFacade().findAll();
+            items = getFacade().getByEvent(eventSelected);
         }
         return items;
+    }
+
+    public void destroy() {
+        persist(selected, PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("EventDeleted"));
+        if (!JsfUtil.isValidationFailed()) {
+            selected = null; // Remove selection
+            items = null;    // Invalidate list of items to trigger re-query.
+        }
     }
 
     private void persist(VideoEvent selected, PersistAction persistAction, String successMessage) {

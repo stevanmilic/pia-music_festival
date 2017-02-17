@@ -11,10 +11,11 @@
         <p:dialog id="VideoEventCreateDlg" widgetVar="VideoEventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateVideoEventTitle}">
             <h:form id="VideoEventCreateForm">
                 <p:fileUpload fileUploadListener="#{videoEventController.handleFileUpload}" mode="advanced"
-                              multiple="true" update="messages" allowTypes="/(\.|\/)(avi|mov|mpeg4)$/" />
+                              multiple="true" update="messages" allowTypes="/(\.|\/)(avi|mov|mpeg4|mp4)$/" />
                 <p:growl id="messages" showDetail="true" />
 
-                <p:commandButton value="#{bundle.Done}" onclick="VideoEventCreateDialog.hide()"/>
+                <p:commandButton rendered="#{empty videoPage}" value="#{bundle.Done}" onclick="VideoEventCreateDialog.hide()"/>
+                <p:commandButton rendered="#{not empty videoPage}" value="#{bundle.Create}" onclick="VideoEventCreateDialog.hide()" update=":growl,:VideoEventListForm:datalist"/>
             </h:form>
         </p:dialog>
 
