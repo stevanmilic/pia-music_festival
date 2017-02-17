@@ -17,49 +17,68 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 /**
  *
  * @author stevan
- *     
- * Note: do a background check(query or list count) for number of reserved tickets for 
- * specific user and for number of current tickets for the event.
- * 
+ *
+ * Note: do a background check(query or list count) for number of reserved
+ * tickets for specific user and for number of current tickets for the event.
+ *
  */
 @Entity
-@Table(name="ticket")
+@Table(name = "ticket")
 public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @Column(name="type", nullable = false)
-    //false - for one day
-    //true - for whole trip :D
-    private boolean type;
-    
-    @Column(name="status", nullable = false)
-    //false - reserved
-    //true - sold
-    private boolean status;
-    
+
+    @Column(name = "type", nullable = false)
+    //possible values
+    //oneday - for one day
+    //wholetrip - for whole trip :D
+    private String type;
+
+    @Column(name = "status", nullable = false)
+    //possible values
+    //Reserved - user has reserved the ticket
+    //Sold - admin has approved the purchase
+    //Disabled - admin has not approved the purchase for two days! omg stupid
+    private String status;
+
     @ManyToOne
-    @JoinColumn(name="fk_registered_user_ticket")
+    @JoinColumn(name = "fk_registered_user_ticket")
     private RegisteredUser registeredUser;
-    
+
     @ManyToOne
-    @JoinColumn(name="fk_event_ticket")
+    @JoinColumn(name = "fk_event_ticket")
     private Event event;
 
-    public boolean isType() {
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "timestamp", nullable = false,
+            columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
+    private Date timestamp = new Date();
+
+    public String getType() {
         return type;
     }
 
-    public boolean isStatus() {
+    public String getStatus() {
         return status;
     }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
 
     public RegisteredUser getRegisteredUser() {
         return registeredUser;
@@ -73,14 +92,6 @@ public class Ticket implements Serializable {
         return timestamp;
     }
 
-    public void setType(boolean type) {
-        this.type = type;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
-    }
-
     public void setRegisteredUser(RegisteredUser registeredUser) {
         this.registeredUser = registeredUser;
     }
@@ -92,11 +103,6 @@ public class Ticket implements Serializable {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
-            
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name="timestamp", nullable = false,
-    columnDefinition="TIMESTAMP default CURRENT_TIMESTAMP")
-    private Date timestamp = new Date();
 
     public Long getId() {
         return id;
@@ -130,5 +136,5 @@ public class Ticket implements Serializable {
     public String toString() {
         return "Entities.Ticket[ id=" + id + " ]";
     }
-    
+
 }

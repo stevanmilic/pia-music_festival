@@ -52,7 +52,7 @@ public class Event implements Serializable {
     private int priceForWhole;
     
     @Column(name="max_tickets", nullable = false)
-    private int maxTickets;
+    private int maxTicketsPerDay;
     
     @Column(name="max_reservations", nullable = false)
     private int maxReservations;
@@ -150,7 +150,7 @@ public class Event implements Serializable {
     }
 
     public int getMaxTickets() {
-        return maxTickets;
+        return maxTicketsPerDay;
     }
 
     public int getMaxReservations() {
@@ -166,7 +166,7 @@ public class Event implements Serializable {
     }
 
     public void setMaxTickets(int maxTickets) {
-        this.maxTickets = maxTickets;
+        this.maxTicketsPerDay = maxTickets;
     }
 
     public void setMaxReservations(int maxReservations) {
