@@ -62,12 +62,10 @@ public class TicketController implements Serializable {
                     reservedCount += DateHelper.getDateDiff(selected.getEvent().getStartDate(), selected.getEvent().getEndDate(), TimeUnit.DAYS);
                 }
                 if (reservedCount > selected.getEvent().getMaxReservations()) {
-                    JsfUtil.addErrorMessage("Maximum tickets booked reached(" + selected.getEvent().getMaxReservations() + ")");
                     return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -80,7 +78,6 @@ public class TicketController implements Serializable {
                     || ticket.getType().equals(Ticket.TYPE_WHOLE_TRIP))) {
                 ticketsSold++;
                 if (ticketsSold >= (selected.getEvent().getMaxTicketsPerDay())) {
-                    JsfUtil.addErrorMessage("Tickets have been sold for this Date(" + DateHelper.getFormatedDate(date) + ")");
                     return true;
                 }
             }
@@ -136,13 +133,30 @@ public class TicketController implements Serializable {
     }
 
     public void create() {
-        if (!isMaxBooked() && !isMaxTicketsSoldByTrip()) {
-            persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TicketCreated"));
-            JsfUtil.addSuccessMessage("Successfully bought tickets for whole trip(" + selected.getEvent().getName() + ")");
-            //JsfUtil.addSuccessMessage("Amount to pay: " + selected.getEvent().getPriceForWhole());
-        }
-        if (!JsfUtil.isValidationFailed()) {
-            items = null;    // Invalidate list of items to trigger re-query.
+        //TO DO: implement validator for this ifs....
+        if (isMaxBooked()) {
+            JsfUtil.addErrorMessage("Maximum tickets booked reached(" + selected.getEvent().getMaxReservations() + ")");
+        } else {
+            if (selected.getType().equals(Ticket.TYPE_ONE_DAY)) {
+                if (isMaxTicketsSoldByDate(selected.getDayEvent())) {
+                    JsfUtil.addErrorMessage("Tickets have been sold for this Date(" + DateHelper.getFormatedDate(selected.getDayEvent()) + ")");
+                } else {
+                    persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TicketCreated"));
+
+                    JsfUtil.addSuccessMessage("Successfully bought tickets for one day(" + selected.getEvent().getName() + ")");
+                    JsfUtil.addSuccessMessage("Amount to pay: " + selected.getEvent().getPricePerDay());
+                }
+            } else {
+                if (isMaxTicketsSoldByTrip()) {
+                    JsfUtil.addErrorMessage("Tickets have been sold on this Date("
+                            + DateHelper.getFormatedDate(selected.getDayEvent()) + ")."
+                            + "\nTry buying One day Ticket");
+                } else {
+                    persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TicketCreated"));
+                    JsfUtil.addSuccessMessage("Successfully bought tickets for whole trip(" + selected.getEvent().getName() + ")");
+                    JsfUtil.addSuccessMessage("Amount to pay: " + selected.getEvent().getPriceForWhole());
+                }
+            }
         }
     }
 

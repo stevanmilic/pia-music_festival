@@ -3,10 +3,12 @@ package Controllers;
 import Entities.Event;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.Ticket;
 import Entities.util.HibernateUtil;
 import Utils.EventFacade;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -126,8 +128,8 @@ public class EventController implements Serializable {
     public void setTopRatedItems() {
         items = getFacade().getTopRatedEvents();
     }
-    
-    public void setRecentEvents(){
+
+    public void setRecentEvents() {
         items = getFacade().getRecentEvents();
     }
 

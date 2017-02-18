@@ -3,9 +3,12 @@ package Controllers;
 import Entities.RegisteredUser;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.Event;
+import Entities.Ticket;
 import Utils.RegisteredUserFacade;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -28,6 +31,26 @@ public class RegisteredUserController implements Serializable {
     private List<RegisteredUser> items = null;
     private RegisteredUser selected;
     private String confirmPassword;
+
+    public void checkEventForMessages(Event event) {
+        if (event.getEndDate().after(new Date())) {
+            for (Ticket ticket : getFacade().getTicketsByEvent(event)) {
+                if (ticket.getStatus().equals(Ticket.STATUS_BOOKED)) {
+                    String message = event.getName() + " event has been canceled.";
+                    addMessage(ticket.getRegisteredUser(), message);
+                } else if (ticket.getStatus().equals(Ticket.STATUS_SOLD)) {
+                    String message = event.getName() + " event has been canceled."
+                            + "\nYou can get your money at the Box office";
+                    addMessage(ticket.getRegisteredUser(), message);
+                }
+            }
+        }
+    }
+
+    public void addMessage(RegisteredUser registeredUser, String message) {
+        registeredUser.getMessages().add(message);
+        getFacade().edit(registeredUser);
+    }
 
     public String getConfirmPassword() {
         return confirmPassword;
@@ -89,12 +112,12 @@ public class RegisteredUserController implements Serializable {
         }
         return items;
     }
-    
-    public void setDefaultItems(){
+
+    public void setDefaultItems() {
         items = getFacade().findAll();
     }
-    
-    public void setLastItems(){
+
+    public void setLastItems() {
         items = getFacade().getLastLoggedInUsers();
     }
 

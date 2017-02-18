@@ -5,7 +5,9 @@
  */
 package Utils;
 
+import Entities.Event;
 import Entities.RegisteredUser;
+import Entities.Ticket;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -34,4 +36,8 @@ public class RegisteredUserFacade extends AbstractFacade<RegisteredUser> {
         return em.createQuery("select ru from RegisteredUser ru order by ru.lastLogin desc").setMaxResults(10).getResultList();
     }
     
+    public List<Ticket> getTicketsByEvent(Event event){
+        return em.createQuery("select t from Ticket t where t.event = :event")
+                .setParameter("event", event).getResultList();
+    }
 }

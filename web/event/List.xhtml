@@ -75,7 +75,10 @@
                             <p:commandButton id="createButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{eventController.prepareCreate}" update=":EventCreateForm" oncomplete="PF('EventCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   rendered="#{not empty user}" icon="ui-icon-search" value="#{bundle.View}" update=":EventViewForm" oncomplete="PF('EventViewDialog').show()" disabled="#{empty eventController.selected}"/>
                             <p:commandButton id="editButton"   rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventEditForm" oncomplete="PF('EventEditDialog').show()" disabled="#{empty eventController.selected}"/>
-                            <p:commandButton id="deleteButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{eventController.destroy}" update=":growl,datalist" disabled="#{empty eventController.selected}"/>
+                            <p:commandButton id="deleteButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-trash"  value="#{bundle.Delete}" update=":growl,datalist" disabled="#{empty eventController.selected}">
+                                <f:actionListener binding="#{registeredUserController.checkEventForMessages(eventController.selected)}"/>
+                                <f:actionListener binding="#{eventController.destroy()}"/>
+                            </p:commandButton>
 
                             <br/>
 
@@ -97,12 +100,6 @@
                                              update=":TicketCreateForm"
                                              rendered="#{(user['class'].simpleName eq 'RegisteredUser')}"
                                              disabled="#{empty eventController.selected}"/>
-                            
-                            <!--<p:commandButton id="wholeTripTicket" value="Book now the whole Trip!" 
-                                             update=":growl"
-                                             actionListener="#{ticketController.bookWholeTripTicket(user, eventController.selected)}"
-                                             rendered="#{(user['class'].simpleName eq 'RegisteredUser')}"
-                                             disabled="#{empty eventController.selected}"/>-->
 
                         </f:facet>
                     </p:dataTable>

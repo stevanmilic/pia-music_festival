@@ -17,18 +17,22 @@ import java.util.concurrent.TimeUnit;
 public class DateHelper {
 
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
-        if(date1 == null || date2 == null || timeUnit == null){
+        if (date1 == null || date2 == null || timeUnit == null) {
             return -1;
         }
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
-    
-    public static String getFormatedDate(Date date){
-        if(date == null){
+
+    public static String getFormatedDate(Date date) {
+        if (date == null) {
             return null;
         }
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         return dateFormat.format(date);
+    }
+
+    boolean isWithinRange(Date checkDate, Date startDate, Date endDate) {
+        return !(checkDate.before(startDate) || checkDate.after(endDate));
     }
 }

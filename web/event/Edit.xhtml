@@ -12,15 +12,6 @@
             <h:form id="EventEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{eventController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditEventLabel_visitCount}" for="visitCount" />
-                        <p:inputText id="visitCount" value="#{eventController.selected.visitCount}" title="#{bundle.EditEventTitle_visitCount}" />
-
-                        <p:outputLabel value="#{bundle.EditEventLabel_maxTicketsPerDay}" for="maxTicketsPerDay" />
-                        <p:inputText id="maxTicketsPerDay" value="#{eventController.selected.maxTicketsPerDay}" title="#{bundle.EditEventTitle_maxTicketsPerDay}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_maxTicketsPerDay}"/>
-
-                        <p:outputLabel value="#{bundle.EditEventLabel_maxReservations}" for="maxReservations" />
-                        <p:inputText id="maxReservations" value="#{eventController.selected.maxReservations}" title="#{bundle.EditEventTitle_maxReservations}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_maxReservations}"/>
-
                         <p:outputLabel value="#{bundle.EditEventLabel_name}" for="name" />
                         <p:inputText id="name" value="#{eventController.selected.name}" title="#{bundle.EditEventTitle_name}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_name}"/>
 
@@ -40,6 +31,13 @@
                         <p:outputLabel value="#{bundle.EditEventLabel_priceForWhole}" for="priceForWhole" />
                         <p:inputText id="priceForWhole" value="#{eventController.selected.priceForWhole}" title="#{bundle.EditEventTitle_priceForWhole}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_priceForWhole}"/>
                         
+                        <p:outputLabel value="#{bundle.EditEventLabel_maxTicketsPerDay}" for="maxTicketsPerDay" />
+                        <p:inputText id="maxTicketsPerDay" value="#{eventController.selected.maxTicketsPerDay}" title="#{bundle.EditEventTitle_maxTicketsPerDay}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_maxTicketsPerDay}"/>
+
+                        <p:outputLabel value="#{bundle.EditEventLabel_maxReservations}" for="maxReservations" />
+                        <p:inputText id="maxReservations" value="#{eventController.selected.maxReservations}" title="#{bundle.EditEventTitle_maxReservations}" required="true" requiredMessage="#{bundle.EditEventRequiredMessage_maxReservations}"/>
+
+
                         <p:outputLabel value="#{bundle.CreateEventLabel_facebookLink}" for="facebookLink" />
                         <p:inputText id="facebookLink" value="#{eventController.selected.facebookLink}" title="#{bundle.CreateEventTitle_facebookLink}" />
 

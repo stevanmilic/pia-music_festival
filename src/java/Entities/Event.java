@@ -8,6 +8,7 @@ package Entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -110,19 +111,19 @@ public class Event implements Serializable {
         this.youtubeLink = youtubeLink;
     }
     
-    @OneToMany(mappedBy="event")
+    @OneToMany(mappedBy="event", cascade=CascadeType.REMOVE)
     private List<CommentEvent> comments;
     
-    @OneToMany(mappedBy="event")
+    @OneToMany(mappedBy="event", cascade=CascadeType.REMOVE)
     private List<DetailEvent> details;
     
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade=CascadeType.REMOVE)
     private List<ImageEvent> images;
     
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade=CascadeType.REMOVE)
     private List<VideoEvent> videos;
     
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", cascade=CascadeType.REMOVE)
     private List<Ticket> tickets;
 
     public double getRating() {

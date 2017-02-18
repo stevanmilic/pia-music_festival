@@ -6,8 +6,11 @@
 package Entities;
 
 import java.util.List;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -30,6 +33,15 @@ public class RegisteredUser extends User {
 
     @Column(name = "activated")
     private boolean activated = false;
+    
+    @ElementCollection
+    @CollectionTable(name="messages", joinColumns = @JoinColumn(name="ID"))
+    @Column(name="message")
+    private List<String> messages;
+
+    public List<String> getMessages() {
+        return messages;
+    }
 
     public boolean isActivated() {
         return activated;
