@@ -11,9 +11,7 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -44,11 +42,11 @@ public class Ticket implements Serializable {
     TicketId ticketId;
 
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="id_event_ticket", referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name = "id_event_ticket", referencedColumnName = "ID")
     private Event event;
-    
+
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="id_registered_user_ticket", referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name = "id_registered_user_ticket", referencedColumnName = "ID")
     private RegisteredUser registeredUser;
 
     @Column(name = "type", nullable = false)
@@ -57,10 +55,9 @@ public class Ticket implements Serializable {
     @Column(name = "status", nullable = false)
     private String status;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "timestamp", nullable = false,
-            columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
-    private Date timestamp = new Date();
+    @Temporal(TemporalType.DATE)
+    @Column(name = "event_day")
+    private Date dayEvent;
 
     public void setRegisteredUser(RegisteredUser registeredUser) {
         this.registeredUser = registeredUser;
@@ -86,10 +83,6 @@ public class Ticket implements Serializable {
         this.ticketId = ticketId;
     }
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "event_day")
-    private Date dayEvent;
-
     public Date getDayEvent() {
         return dayEvent;
     }
@@ -112,14 +105,6 @@ public class Ticket implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
     }
 
     @Override
@@ -149,7 +134,7 @@ public class Ticket implements Serializable {
 
     @Override
     public String toString() {
-        return "Ticket{" + "ticketId=" + ticketId + ", type=" + type + ", status=" + status + ", timestamp=" + timestamp + ", dayEvent=" + dayEvent + '}';
+        return "Ticket{" + "ticketId=" + ticketId + ", type=" + type + ", status=" + status + ", timestamp=" + ", dayEvent=" + dayEvent + '}';
     }
 
 }

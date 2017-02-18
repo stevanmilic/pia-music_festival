@@ -6,8 +6,11 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -15,6 +18,11 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class TicketId implements Serializable {
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "timestamp", nullable = false,
+            columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
+    private Date timestamp = new Date();
 
     @Column(name = "id_event_ticket")
     private long eventId;
@@ -36,6 +44,14 @@ public class TicketId implements Serializable {
 
     public void setUserId(long userId) {
         this.userId = userId;
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
 }

@@ -30,4 +30,9 @@ public class TicketFacade extends AbstractFacade<Ticket> {
         super(Ticket.class);
     }
     
+    @Override
+    public List<Ticket> findAll(){
+        return em.createQuery("select t from Ticket t").getResultList();
+    }
+    
 }

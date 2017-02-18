@@ -36,7 +36,7 @@ public class EventController implements Serializable {
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 
     public EventController() {
-        HibernateUtil.getSessionFactory().openSession();
+        //HibernateUtil.getSessionFactory().openSession();
     }
 
     public List<Event> getFilteredItems() {
