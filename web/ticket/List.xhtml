@@ -19,53 +19,60 @@
                     <p:dataTable id="datalist" value="#{ticketController.items}" var="item"
                                  selectionMode="single" selection="#{ticketController.selected}"
                                  paginator="true"
-                                 rowKey="#{item.id}"
+                                 rowKey="#{item.ticketId}"
                                  rows="10"
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowSelect"   update="editButton "/>
+                        <p:ajax event="rowUnselect" update="editButton "/>
 
-                        <p:column>
+                        <p:column rendered="#{user['class'].simpleName eq 'AdminUser'}">
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListTicketTitle_registeredUser}"/>
                             </f:facet>
-                            <h:outputText value="#{item.registeredUser}"/>
+                            <h:outputText value="#{item.registeredUser.userName}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListTicketTitle_event}"/>
                             </f:facet>
-                            <h:outputText value="#{item.event}"/>
+                            <h:outputText value="#{item.event.name}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListTicketTitle_timestamp}"/>
                             </f:facet>
-                            <h:outputText value="#{item.timestamp}">
+                            <h:outputText value="#{item.ticketId.timestamp}">
                                 <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                             </h:outputText>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="#{bundle.ListTicketTitle_id}"/>
+                                <h:outputText value="Status"/>
                             </f:facet>
-                            <h:outputText value="#{item.id}"/>
+                            <h:outputText value="#{item.status}"/>
                         </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Type"/>
+                            </f:facet>
+                            <h:outputText value="#{item.type}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Day Ticket Date"/>
+                            </f:facet>
+                            <h:outputText value="#{item.dayEvent}" />
+                        </p:column>
+
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{ticketController.prepareCreate}" update=":TicketCreateForm" oncomplete="PF('TicketCreateDialog').show()"/>
-                            <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":TicketViewForm" oncomplete="PF('TicketViewDialog').show()" disabled="#{empty ticketController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TicketEditForm" oncomplete="PF('TicketEditDialog').show()" disabled="#{empty ticketController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{ticketController.destroy}" update=":growl,datalist" disabled="#{empty ticketController.selected}"/>
+                            <p:commandButton id="editButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TicketEditForm" oncomplete="PF('TicketEditDialog').show()" disabled="#{empty ticketController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
-
-            <ui:include src="Create.xhtml"/>
             <ui:include src="Edit.xhtml"/>
-            <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
 

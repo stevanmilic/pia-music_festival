@@ -59,6 +59,26 @@ public class Ticket implements Serializable {
     @Column(name = "event_day")
     private Date dayEvent;
 
+    public String getTYPE_ONE_DAY() {
+        return TYPE_ONE_DAY;
+    }
+
+    public String getTYPE_WHOLE_TRIP() {
+        return TYPE_WHOLE_TRIP;
+    }
+
+    public String getSTATUS_BOOKED() {
+        return STATUS_BOOKED;
+    }
+
+    public String getSTATUS_SOLD() {
+        return STATUS_SOLD;
+    }
+
+    public String getSTATUS_DISABLED() {
+        return STATUS_DISABLED;
+    }
+
     public void setRegisteredUser(RegisteredUser registeredUser) {
         this.registeredUser = registeredUser;
     }

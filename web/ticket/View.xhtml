@@ -17,11 +17,10 @@
                         <h:outputText value="#{bundle.ViewTicketLabel_event}"/>
                         <h:outputText value="#{ticketController.selected.event}" title="#{bundle.ViewTicketTitle_event}"/>
                         <h:outputText value="#{bundle.ViewTicketLabel_timestamp}"/>
-                        <h:outputText value="#{ticketController.selected.timestamp}" title="#{bundle.ViewTicketTitle_timestamp}">
+                        <h:outputText value="#{ticketController.selected.ticketId.timestamp}" title="#{bundle.ViewTicketTitle_timestamp}">
                             <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
                         </h:outputText>
                         <h:outputText value="#{bundle.ViewTicketLabel_id}"/>
-                        <h:outputText value="#{ticketController.selected.id}" title="#{bundle.ViewTicketTitle_id}"/>
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Close}" onclick="TicketViewDialog.hide()"/>
                 </h:panelGroup>

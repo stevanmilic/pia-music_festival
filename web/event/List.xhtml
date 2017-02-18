@@ -30,8 +30,8 @@
                                  widgetVar="eventsTable"
                                  >
 
-                        <p:ajax event="rowSelect"   update="oneDayTicket wholeTripTicket createButton viewButton editButton deleteButton detailsViewButton imagesViewButton videosViewButton"/>
-                        <p:ajax event="rowUnselect" update="oneDayTicket wholeTripTicket createButton viewButton editButton deleteButton detailsViewButton imagesViewButton videosViewButton"/>
+                        <p:ajax event="rowSelect"   update="bookNow createButton viewButton editButton deleteButton detailsViewButton imagesViewButton videosViewButton"/>
+                        <p:ajax event="rowUnselect" update="bookNow createButton viewButton editButton deleteButton detailsViewButton imagesViewButton videosViewButton"/>
 
                         <p:column filterBy="#{item.name}" headerText="#{bundle.ListEventTitle_name}" filterMatchMode="contains">
                             <h:outputText value="#{item.name}"/>
@@ -91,20 +91,18 @@
 
                             <br/>
 
-                            <!--<f:ajax execute="#{(empty eventController.selected) or (not empty eventController.selected and 
-                                               (ticketController.isMaxBooked(user, eventController.selected) or
-                                               ticketController.isMaxTicketsSoldByTrip(eventController.selected)))}"
-                                    disabled="oneDayTicket wholeTripTicker"/>-->
-
-                            <p:commandButton id="oneDayTicket" value="Book now one day Ticket" 
+                            <p:commandButton id="bookNow" value="Book now!" 
+                                             actionListener="#{ticketController.prepareCreate(user, eventController.selected)}"
+                                             oncomplete="PF('TicketCreateDialog').show()"
+                                             update=":TicketCreateForm"
                                              rendered="#{(user['class'].simpleName eq 'RegisteredUser')}"
                                              disabled="#{empty eventController.selected}"/>
                             
-                            <p:commandButton id="wholeTripTicket" value="Book now the whole Trip!" 
+                            <!--<p:commandButton id="wholeTripTicket" value="Book now the whole Trip!" 
                                              update=":growl"
                                              actionListener="#{ticketController.bookWholeTripTicket(user, eventController.selected)}"
                                              rendered="#{(user['class'].simpleName eq 'RegisteredUser')}"
-                                             disabled="#{empty eventController.selected}"/>
+                                             disabled="#{empty eventController.selected}"/>-->
 
                         </f:facet>
                     </p:dataTable>
@@ -114,6 +112,7 @@
             <ui:include src="../videoEvent/Create.xhtml" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
             <ui:include src="../imageEvent/Create.xhtml" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
             <ui:include src="../detailEvent/Create.xhtml" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
+            <ui:include src="../ticket/Create.xhtml" rendered="#{user['class'].simpleName eq 'RegisteredUser'}"/>
             <ui:include src="Create.xhtml" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
             <ui:include src="Edit.xhtml" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
             <ui:include src="View.xhtml" rendered="#{not empty user}"/>

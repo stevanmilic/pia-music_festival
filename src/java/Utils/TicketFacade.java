@@ -5,6 +5,7 @@
  */
 package Utils;
 
+import Entities.RegisteredUser;
 import Entities.Ticket;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -30,9 +31,8 @@ public class TicketFacade extends AbstractFacade<Ticket> {
         super(Ticket.class);
     }
     
-    @Override
-    public List<Ticket> findAll(){
-        return em.createQuery("select t from Ticket t").getResultList();
+    public List<Ticket> getTicketsByRegisteredUser(RegisteredUser registeredUser){
+        return em.createQuery("select t from Ticket t where t.registeredUser = :registeredUser").
+                setParameter("registeredUser", registeredUser).getResultList();
     }
-    
 }

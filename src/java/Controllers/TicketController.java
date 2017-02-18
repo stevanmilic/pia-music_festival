@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -25,6 +26,7 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.servlet.http.HttpSession;
 
 @Named("ticketController")
 @SessionScoped
@@ -34,29 +36,33 @@ public class TicketController implements Serializable {
     private Utils.TicketFacade ejbFacade;
     private List<Ticket> items = null;
     private Ticket selected;
+    private boolean initialized = false;
+
+    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 
     public TicketController() {
     }
 
-    public boolean isMaxBooked(RegisteredUser registeredUser, Event event, String type) {
+    public boolean isMaxBooked() {
         long reservedCount;
 
-        if (type.equals(Ticket.TYPE_ONE_DAY)) {
+        if (selected.getType().equals(Ticket.TYPE_ONE_DAY)) {
             reservedCount = 1;
         } else {
-            reservedCount = DateHelper.getDateDiff(event.getStartDate(), event.getEndDate(), TimeUnit.DAYS);
+            reservedCount = DateHelper.getDateDiff(selected.getEvent().getStartDate(), selected.getEvent().getEndDate(), TimeUnit.DAYS);
         }
 
-        for (Ticket ticket : getItems()) {
-            if (ticket.getRegisteredUser() == registeredUser && ticket.getEvent() == event
+        for (Ticket ticket : getFacade().findAll()) {
+            if (Objects.equals(ticket.getRegisteredUser().getId(), selected.getRegisteredUser().getId())
+                    && Objects.equals(ticket.getEvent().getId(), selected.getEvent().getId())
                     && ticket.getStatus().equals(Ticket.STATUS_BOOKED)) {
                 if (ticket.getType().equals(Ticket.TYPE_ONE_DAY)) {
                     reservedCount++;
                 } else {
-                    reservedCount += DateHelper.getDateDiff(event.getStartDate(), event.getEndDate(), TimeUnit.DAYS);
+                    reservedCount += DateHelper.getDateDiff(selected.getEvent().getStartDate(), selected.getEvent().getEndDate(), TimeUnit.DAYS);
                 }
-                if (reservedCount > event.getMaxReservations()) {
-                    JsfUtil.addErrorMessage("Maximum tickets booked reached(" + event.getMaxReservations() + ")");
+                if (reservedCount > selected.getEvent().getMaxReservations()) {
+                    JsfUtil.addErrorMessage("Maximum tickets booked reached(" + selected.getEvent().getMaxReservations() + ")");
                     return true;
                 }
             }
@@ -65,14 +71,15 @@ public class TicketController implements Serializable {
         return false;
     }
 
-    public boolean isMaxTicketsSoldByDate(Event event, Date date) {
+    public boolean isMaxTicketsSoldByDate(Date date) {
         int ticketsSold = 0;
-        for (Ticket ticket : getItems()) {
-            if (ticket.getEvent() == event && ticket.getStatus().equals(Ticket.STATUS_SOLD)
+        for (Ticket ticket : getFacade().findAll()) {
+            if (Objects.equals(ticket.getEvent().getId(), selected.getEvent().getId())
+                    && ticket.getStatus().equals(Ticket.STATUS_SOLD)
                     && ((ticket.getType().equals(Ticket.TYPE_ONE_DAY) && ticket.getDayEvent().compareTo(date) == 0)
                     || ticket.getType().equals(Ticket.TYPE_WHOLE_TRIP))) {
                 ticketsSold++;
-                if (ticketsSold >= (event.getMaxTicketsPerDay())) {
+                if (ticketsSold >= (selected.getEvent().getMaxTicketsPerDay())) {
                     JsfUtil.addErrorMessage("Tickets have been sold for this Date(" + DateHelper.getFormatedDate(date) + ")");
                     return true;
                 }
@@ -81,46 +88,19 @@ public class TicketController implements Serializable {
         return false;
     }
 
-    public boolean isMaxTicketsSoldByTrip(Event event) {
+    public boolean isMaxTicketsSoldByTrip() {
         Calendar start = Calendar.getInstance();
-        start.setTime(event.getStartDate());
+        start.setTime(selected.getEvent().getStartDate());
         Calendar end = Calendar.getInstance();
-        end.setTime(event.getEndDate());
+        end.setTime(selected.getEvent().getEndDate());
 
         for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
-            if (isMaxTicketsSoldByDate(event, date)) {
+            if (isMaxTicketsSoldByDate(date)) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    public void bookOneDayTicket(RegisteredUser registeredUser, Event event, Date date) {
-        Ticket ticket = new Ticket();
-        TicketId ticketId = new TicketId();
-        ticketId.setEventId(event.getId());
-        ticketId.setUserId(registeredUser.getId());
-        ticket.setTicketId(ticketId);
-        ticket.setDayEvent(date);
-        ticket.setType(Ticket.TYPE_ONE_DAY);
-        ticket.setStatus(Ticket.STATUS_BOOKED);
-        getFacade().create(ticket);
-    }
-
-    public void bookWholeTripTicket(RegisteredUser registeredUser, Event event) {
-        if (!isMaxBooked(registeredUser, event, Ticket.TYPE_WHOLE_TRIP) && !isMaxTicketsSoldByTrip(event)) {
-            Ticket ticket = new Ticket();
-            TicketId ticketId = new TicketId();
-            ticketId.setEventId(event.getId());
-            ticketId.setUserId(registeredUser.getId());
-            ticket.setTicketId(ticketId);
-            ticket.setType(Ticket.TYPE_WHOLE_TRIP);
-            ticket.setStatus(Ticket.STATUS_BOOKED);
-            getFacade().create(ticket);
-            JsfUtil.addSuccessMessage("Successfully bought tickets for whole trip(" + event.getName() + ")");
-            JsfUtil.addSuccessMessage("Amount to pay: " + event.getPriceForWhole());
-        }
     }
 
     public Ticket getSelected() {
@@ -132,23 +112,35 @@ public class TicketController implements Serializable {
     }
 
     protected void setEmbeddableKeys() {
+
     }
 
-    protected void initializeEmbeddableKey() {
+    protected void initializeEmbeddableKey(long eventId, long userId) {
+        TicketId ticketId = new TicketId();
+        ticketId.setEventId(eventId);
+        ticketId.setUserId(userId);
+        selected.setTicketId(ticketId);
     }
 
     private TicketFacade getFacade() {
         return ejbFacade;
     }
 
-    public Ticket prepareCreate() {
+    public Ticket prepareCreate(RegisteredUser registeredUser, Event event) {
         selected = new Ticket();
-        initializeEmbeddableKey();
+        selected.setStatus(Ticket.STATUS_BOOKED);
+        selected.setRegisteredUser(registeredUser);
+        selected.setEvent(event);
+        initializeEmbeddableKey(event.getId(), registeredUser.getId());
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TicketCreated"));
+        if (!isMaxBooked() && !isMaxTicketsSoldByTrip()) {
+            persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TicketCreated"));
+            JsfUtil.addSuccessMessage("Successfully bought tickets for whole trip(" + selected.getEvent().getName() + ")");
+            //JsfUtil.addSuccessMessage("Amount to pay: " + selected.getEvent().getPriceForWhole());
+        }
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
@@ -169,6 +161,11 @@ public class TicketController implements Serializable {
     public List<Ticket> getItems() {
         if (items == null) {
             items = getFacade().findAll();
+        }
+        if (!initialized && session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            items = getFacade().getTicketsByRegisteredUser((RegisteredUser) session.getAttribute("user"));
+            initialized = true;
         }
         return items;
     }
