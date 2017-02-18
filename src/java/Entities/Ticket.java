@@ -7,13 +7,14 @@ package Entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,35 +33,70 @@ public class Ticket implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    public static final String STATUS_BOOKED = "booked";
+    public static final String STATUS_SOLD = "sold";
+    public static final String STATUS_DISABLED = "disabled";
+
+    public static final String TYPE_ONE_DAY = "one_day";
+    public static final String TYPE_WHOLE_TRIP = "whole_trip";
+
+    @EmbeddedId
+    TicketId ticketId;
+
+    @ManyToOne
+    @PrimaryKeyJoinColumn(name="id_event_ticket", referencedColumnName = "ID")
+    private Event event;
+    
+    @ManyToOne
+    @PrimaryKeyJoinColumn(name="id_registered_user_ticket", referencedColumnName = "ID")
+    private RegisteredUser registeredUser;
 
     @Column(name = "type", nullable = false)
-    //possible values
-    //oneday - for one day
-    //wholetrip - for whole trip :D
     private String type;
 
     @Column(name = "status", nullable = false)
-    //possible values
-    //Reserved - user has reserved the ticket
-    //Sold - admin has approved the purchase
-    //Disabled - admin has not approved the purchase for two days! omg stupid
     private String status;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_registered_user_ticket")
-    private RegisteredUser registeredUser;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_event_ticket")
-    private Event event;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "timestamp", nullable = false,
             columnDefinition = "TIMESTAMP default CURRENT_TIMESTAMP")
     private Date timestamp = new Date();
+
+    public void setRegisteredUser(RegisteredUser registeredUser) {
+        this.registeredUser = registeredUser;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    public RegisteredUser getRegisteredUser() {
+        return registeredUser;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public TicketId getTicketId() {
+        return ticketId;
+    }
+
+    public void setTicketId(TicketId ticketId) {
+        this.ticketId = ticketId;
+    }
+
+    @Temporal(TemporalType.DATE)
+    @Column(name = "event_day")
+    private Date dayEvent;
+
+    public Date getDayEvent() {
+        return dayEvent;
+    }
+
+    public void setDayEvent(Date dayEvent) {
+        this.dayEvent = dayEvent;
+    }
 
     public String getType() {
         return type;
@@ -77,56 +113,35 @@ public class Ticket implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-    
-    
-
-    public RegisteredUser getRegisteredUser() {
-        return registeredUser;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
 
     public Date getTimestamp() {
         return timestamp;
-    }
-
-    public void setRegisteredUser(RegisteredUser registeredUser) {
-        this.registeredUser = registeredUser;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
     }
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     @Override
     public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        int hash = 5;
+        hash = 59 * hash + Objects.hashCode(this.ticketId);
         return hash;
     }
 
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Ticket)) {
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
             return false;
         }
-        Ticket other = (Ticket) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Ticket other = (Ticket) obj;
+        if (!Objects.equals(this.ticketId, other.ticketId)) {
             return false;
         }
         return true;
@@ -134,7 +149,7 @@ public class Ticket implements Serializable {
 
     @Override
     public String toString() {
-        return "Entities.Ticket[ id=" + id + " ]";
+        return "Ticket{" + "ticketId=" + ticketId + ", type=" + type + ", status=" + status + ", timestamp=" + timestamp + ", dayEvent=" + dayEvent + '}';
     }
 
 }

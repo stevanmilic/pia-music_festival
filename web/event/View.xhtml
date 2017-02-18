@@ -14,8 +14,8 @@
                     <p:panelGrid columns="2" rendered="#{eventController.selected != null}">
                         <h:outputText value="#{bundle.ViewEventLabel_visitCount}"/>
                         <h:outputText value="#{eventController.selected.visitCount}" title="#{bundle.ViewEventTitle_visitCount}"/>
-                        <h:outputText value="#{bundle.ViewEventLabel_maxTickets}"/>
-                        <h:outputText value="#{eventController.selected.maxTickets}" title="#{bundle.ViewEventTitle_maxTickets}"/>
+                        <h:outputText value="#{bundle.ViewEventLabel_maxTicketsPerDay}"/>
+                        <h:outputText value="#{eventController.selected.maxTicketsPerDay}" title="#{bundle.ViewEventTitle_maxTicketsPerDay}"/>
                         <h:outputText value="#{bundle.ViewEventLabel_maxReservations}"/>
                         <h:outputText value="#{eventController.selected.maxReservations}" title="#{bundle.ViewEventTitle_maxReservations}"/>
                         <h:outputText value="#{bundle.ViewEventLabel_name}"/>
@@ -30,8 +30,21 @@
                         </h:outputText>
                         <h:outputText value="#{bundle.ViewEventLabel_pricePerDay}"/>
                         <h:outputText value="#{eventController.selected.pricePerDay}" title="#{bundle.ViewEventTitle_pricePerDay}"/>
-                        <h:outputText value="#{bundle.ViewEventLabel_priceForWhole}"/>
+
+                        <h:outputText value="#{bundle.ViewEventLabel_priceForWhole}" />
                         <h:outputText value="#{eventController.selected.priceForWhole}" title="#{bundle.ViewEventTitle_priceForWhole}"/>
+
+                        <h:outputText value="#{bundle.ViewEventLabel_facebookLink}" />
+                        <h:outputText value="#{eventController.selected.facebookLink}" title="#{bundle.ViewEventTitle_facebookLink}"/>
+
+                        <h:outputText value="#{bundle.ViewEventLabel_twitterLink}" />
+                        <h:outputText value="#{eventController.selected.twitterLink}" title="#{bundle.ViewEventTitle_twitterLink}"/>
+
+                        <h:outputText value="#{bundle.ViewEventLabel_instagramLink}" />
+                        <h:outputText value="#{eventController.selected.instagramLink}" title="#{bundle.ViewEventTitle_instagramLink}"/>
+
+                        <h:outputText value="#{bundle.ViewEventLabel_youtubeLink}" />
+                        <h:outputText value="#{eventController.selected.youtubeLink}" title="#{bundle.ViewEventTitle_youtubeLink}"/>
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Close}" onclick="EventViewDialog.hide()"/>
                 </h:panelGroup>

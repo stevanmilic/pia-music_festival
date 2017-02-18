@@ -15,11 +15,11 @@
         <ui:define name="body">
             <h:form id="EventListForm">
                 <p:panel header="#{bundle.ListEventTitle}">
-                    
+
                     <p:commandButton id="ratedItemsButton" value="Top rated events" action="#{eventController.setTopRatedItems()}" update=":EventListForm:datalist"/>
                     <p:commandButton id="defaultItemsButton" value="All events" action="#{eventController.setDefaultItems()}" update=":EventListForm:datalist"/>
                     <p:commandButton id="recentItemsButton" rendered="#{not empty user}" value="Recent events" action="#{eventController.setRecentEvents()}" update=":EventListForm:datalist"/>
-                   
+
                     <p:dataTable id="datalist" value="#{eventController.items}" var="item"
                                  selectionMode="single" selection="#{eventController.selected}"
                                  paginator="true"
@@ -30,9 +30,9 @@
                                  widgetVar="eventsTable"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton detailsViewButton imagesViewButton videosViewButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton detailsViewButton imagesViewButton videosViewButton"/>
-                        
+                        <p:ajax event="rowSelect"   update="oneDayTicket wholeTripTicket createButton viewButton editButton deleteButton detailsViewButton imagesViewButton videosViewButton"/>
+                        <p:ajax event="rowUnselect" update="oneDayTicket wholeTripTicket createButton viewButton editButton deleteButton detailsViewButton imagesViewButton videosViewButton"/>
+
                         <p:column filterBy="#{item.name}" headerText="#{bundle.ListEventTitle_name}" filterMatchMode="contains">
                             <h:outputText value="#{item.name}"/>
                         </p:column>
@@ -76,16 +76,36 @@
                             <p:commandButton id="viewButton"   rendered="#{not empty user}" icon="ui-icon-search" value="#{bundle.View}" update=":EventViewForm" oncomplete="PF('EventViewDialog').show()" disabled="#{empty eventController.selected}"/>
                             <p:commandButton id="editButton"   rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventEditForm" oncomplete="PF('EventEditDialog').show()" disabled="#{empty eventController.selected}"/>
                             <p:commandButton id="deleteButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{eventController.destroy}" update=":growl,datalist" disabled="#{empty eventController.selected}"/>
+
                             <br/>
-                            <p:commandButton id="detailsViewButton" value="View Details" rendered="#{not empty user}" icon="ui-icon-search" action="/detailEvent/List.xhtml?faces-redirect=true" disabled="#{empty eventController.selected}">
+
+                            <p:commandButton id="detailsViewButton" value="Details" rendered="#{not empty user}" icon="ui-icon-search" action="/detailEvent/List.xhtml?faces-redirect=true" disabled="#{empty eventController.selected}">
                                 <f:actionListener binding="#{detailEventController.setEventSelected(eventController.selected)}"/>
                             </p:commandButton>
-                            <p:commandButton id="imagesViewButton" value="View Images" rendered="#{not empty user}" icon="ui-icon-search" action="/imageEvent/List.xhtml?faces-redirect=true" disabled="#{empty eventController.selected}">
+                            <p:commandButton id="imagesViewButton" value="Images" rendered="#{not empty user}" icon="ui-icon-search" action="/imageEvent/List.xhtml?faces-redirect=true" disabled="#{empty eventController.selected}">
                                 <f:actionListener binding="#{imageEventController.setEventSelected(eventController.selected)}"/>
                             </p:commandButton>
-                            <p:commandButton id="videosViewButton" value="View Videos" rendered="#{not empty user}" icon="ui-icon-search" action="/videoEvent/List.xhtml?faces-redirect=true" disabled="#{empty eventController.selected}">
+                            <p:commandButton id="videosViewButton" value="Videos" rendered="#{not empty user}" icon="ui-icon-search" action="/videoEvent/List.xhtml?faces-redirect=true" disabled="#{empty eventController.selected}">
                                 <f:actionListener binding="#{videoEventController.setEventSelected(eventController.selected)}"/>
                             </p:commandButton>
+
+                            <br/>
+
+                            <!--<f:ajax execute="#{(empty eventController.selected) or (not empty eventController.selected and 
+                                               (ticketController.isMaxBooked(user, eventController.selected) or
+                                               ticketController.isMaxTicketsSoldByTrip(eventController.selected)))}"
+                                    disabled="oneDayTicket wholeTripTicker"/>-->
+
+                            <p:commandButton id="oneDayTicket" value="Book now one day Ticket" 
+                                             rendered="#{(user['class'].simpleName eq 'RegisteredUser')}"
+                                             disabled="#{empty eventController.selected}"/>
+                            
+                            <p:commandButton id="wholeTripTicket" value="Book now the whole Trip!" 
+                                             update=":growl"
+                                             actionListener="#{ticketController.bookWholeTripTicket(user, eventController.selected)}"
+                                             rendered="#{(user['class'].simpleName eq 'RegisteredUser')}"
+                                             disabled="#{empty eventController.selected}"/>
+
                         </f:facet>
                     </p:dataTable>
                 </p:panel>

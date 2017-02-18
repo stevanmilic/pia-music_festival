@@ -149,7 +149,7 @@ public class Event implements Serializable {
         this.place = place;
     }
 
-    public int getMaxTickets() {
+    public int getMaxTicketsPerDay() {
         return maxTicketsPerDay;
     }
 
@@ -165,7 +165,7 @@ public class Event implements Serializable {
         return tickets;
     }
 
-    public void setMaxTickets(int maxTickets) {
+    public void setMaxTicketsPerDay(int maxTickets) {
         this.maxTicketsPerDay = maxTickets;
     }
 

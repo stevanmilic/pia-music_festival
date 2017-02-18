@@ -3,11 +3,19 @@ package Controllers;
 import Entities.Ticket;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.Event;
+import Entities.RegisteredUser;
+import Entities.TicketId;
+import Utils.DateHelper;
 import Utils.TicketFacade;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -29,6 +37,91 @@ public class TicketController implements Serializable {
     private Ticket selected;
 
     public TicketController() {
+    }
+
+    public boolean isMaxBooked(RegisteredUser registeredUser, Event event, String type) {
+        long reservedCount;
+
+        if (type.equals(Ticket.TYPE_ONE_DAY)) {
+            reservedCount = 1;
+        } else {
+            reservedCount = DateHelper.getDateDiff(event.getStartDate(), event.getEndDate(), TimeUnit.DAYS);
+        }
+
+        for (Ticket ticket : getItems()) {
+            if (ticket.getRegisteredUser() == registeredUser && ticket.getEvent() == event
+                    && ticket.getStatus().equals(Ticket.STATUS_BOOKED)) {
+                if (ticket.getType().equals(Ticket.TYPE_ONE_DAY)) {
+                    reservedCount++;
+                } else {
+                    reservedCount += DateHelper.getDateDiff(event.getStartDate(), event.getEndDate(), TimeUnit.DAYS);
+                }
+                if (reservedCount > event.getMaxReservations()) {
+                    JsfUtil.addErrorMessage("Maximum tickets booked reached(" + event.getMaxReservations() + ")");
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isMaxTicketsSoldByDate(Event event, Date date) {
+        int ticketsSold = 0;
+        for (Ticket ticket : getItems()) {
+            if (ticket.getEvent() == event && ticket.getStatus().equals(Ticket.STATUS_SOLD)
+                    && ((ticket.getType().equals(Ticket.TYPE_ONE_DAY) && ticket.getDayEvent().compareTo(date) == 0)
+                    || ticket.getType().equals(Ticket.TYPE_WHOLE_TRIP))) {
+                ticketsSold++;
+                if (ticketsSold >= (event.getMaxTicketsPerDay())) {
+                    JsfUtil.addErrorMessage("Tickets have been sold for this Date(" + DateHelper.getFormatedDate(date) + ")");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isMaxTicketsSoldByTrip(Event event) {
+        Calendar start = Calendar.getInstance();
+        start.setTime(event.getStartDate());
+        Calendar end = Calendar.getInstance();
+        end.setTime(event.getEndDate());
+
+        for (Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime()) {
+            if (isMaxTicketsSoldByDate(event, date)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void bookOneDayTicket(RegisteredUser registeredUser, Event event, Date date) {
+        Ticket ticket = new Ticket();
+        TicketId ticketId = new TicketId();
+        ticketId.setEventId(event.getId());
+        ticketId.setUserId(registeredUser.getId());
+        ticket.setTicketId(ticketId);
+        ticket.setDayEvent(date);
+        ticket.setType(Ticket.TYPE_ONE_DAY);
+        ticket.setStatus(Ticket.STATUS_BOOKED);
+        getFacade().create(ticket);
+    }
+
+    public void bookWholeTripTicket(RegisteredUser registeredUser, Event event) {
+        if (!isMaxBooked(registeredUser, event, Ticket.TYPE_WHOLE_TRIP) && !isMaxTicketsSoldByTrip(event)) {
+            Ticket ticket = new Ticket();
+            TicketId ticketId = new TicketId();
+            ticketId.setEventId(event.getId());
+            ticketId.setUserId(registeredUser.getId());
+            ticket.setTicketId(ticketId);
+            ticket.setType(Ticket.TYPE_WHOLE_TRIP);
+            ticket.setStatus(Ticket.STATUS_BOOKED);
+            getFacade().create(ticket);
+            JsfUtil.addSuccessMessage("Successfully bought tickets for whole trip(" + event.getName() + ")");
+            JsfUtil.addSuccessMessage("Amount to pay: " + event.getPriceForWhole());
+        }
     }
 
     public Ticket getSelected() {
@@ -153,7 +246,7 @@ public class TicketController implements Serializable {
             }
             if (object instanceof Ticket) {
                 Ticket o = (Ticket) object;
-                return getStringKey(o.getId());
+                return getStringKey(o.getTicketId().getEventId());
             } else {
                 Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Ticket.class.getName()});
                 return null;

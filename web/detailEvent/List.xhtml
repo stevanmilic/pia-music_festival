@@ -52,17 +52,17 @@
                             </h:outputText>
                         </p:column>
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{detailEventController.prepareCreate}" update=":DetailEventCreateForm" oncomplete="PF('DetailEventCreateDialog').show()"/>
+                            <p:commandButton id="createButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{detailEventController.prepareCreate}" update=":DetailEventCreateForm" oncomplete="PF('DetailEventCreateDialog').show()"/>
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":DetailEventViewForm" oncomplete="PF('DetailEventViewDialog').show()" disabled="#{empty detailEventController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":DetailEventEditForm" oncomplete="PF('DetailEventEditDialog').show()" disabled="#{empty detailEventController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{detailEventController.destroy}" update=":growl,datalist" disabled="#{empty detailEventController.selected}"/>
+                            <p:commandButton id="editButton"   rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-pencil" value="#{bundle.Edit}" update=":DetailEventEditForm" oncomplete="PF('DetailEventEditDialog').show()" disabled="#{empty detailEventController.selected}"/>
+                            <p:commandButton id="deleteButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{detailEventController.destroy}" update=":growl,datalist" disabled="#{empty detailEventController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
 
-            <ui:include src="Create.xhtml"/>
-            <ui:include src="Edit.xhtml"/>
+            <ui:include src="Create.xhtml" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
+            <ui:include src="Edit.xhtml" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
             <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>
