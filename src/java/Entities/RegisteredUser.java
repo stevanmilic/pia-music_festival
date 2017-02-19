@@ -33,7 +33,7 @@ public class RegisteredUser extends User {
     private List<CommentEvent> comments;
 
     @Column(name = "activated")
-    private boolean activated = false;
+    private boolean activated = true;
     
     @ElementCollection
     @CollectionTable(name="messages", joinColumns = @JoinColumn(name="ID"))

@@ -27,8 +27,8 @@
                                  style="margin: 0 auto;width: 500px"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton deleteButton"/>
+                        <p:ajax event="rowSelect"   update="editButton createButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="editButton createButton deleteButton"/>
 
                         <p:column style="text-align: center;">
                             <p:graphicImage value="#{imageEventController.image}" width="auto" height="auto">
@@ -37,8 +37,13 @@
                         </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" oncomplete="PF('ImageEventCreateDialog').show()"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{imageEventController.destroy}" update=":growl,datalist" disabled="#{empty imageEventController.selected}"/>
+                            <p:commandButton rendered="#{not empty user}" disabled="#{eventController.isAddingImagesAndVideosDisabled(imageEventController.eventSelected)}"
+                                             id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" oncomplete="PF('ImageEventCreateDialog').show()"/>
+                            <p:commandButton update=":ImageEventEditForm" rendered="#{user['class'].simpleName eq 'AdminUser'}" 
+                                             disabled="#{imageEventController.editDisabled}"
+                                             id="editButton" icon="ui-icon-plus" value="#{bundle.Edit}" 
+                                             oncomplete="PF('ImageEventEditDialog').show()"/>
+                            <p:commandButton rendered="#{user['class'].simpleName eq 'AdminUser'}" id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{imageEventController.destroy}" update=":growl,datalist" disabled="#{empty imageEventController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>

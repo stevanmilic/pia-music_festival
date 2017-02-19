@@ -179,9 +179,9 @@ public class RegisteredUserController implements Serializable {
     }
 
     public List<RegisteredUser> getItems() {
-        if (items == null) {
+        //if (items == null) {
             items = getFacade().findAll();
-        }
+        //}
         return items;
     }
 

@@ -39,7 +39,6 @@ public class TicketController implements Serializable {
     private Utils.TicketFacade ejbFacade;
     private List<Ticket> items = null;
     private Ticket selected;
-    private boolean initialized = false;
 
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 
@@ -52,17 +51,17 @@ public class TicketController implements Serializable {
         }
         return !selected.getStatus().equals(Ticket.STATUS_BOOKED);
     }
-    
-    public void updateTickets(){
-        for(Ticket ticket : items){
-            if(ticket.getStatus().equals(Ticket.STATUS_BOOKED) && isDisabled(ticket)){
+
+    public void updateTickets() {
+        for (Ticket ticket : items) {
+            if (ticket.getStatus().equals(Ticket.STATUS_BOOKED) && isDisabled(ticket)) {
                 JsfUtil.addWarningMessage(ticket.toString() + " has been Disabled!");
             }
         }
     }
 
     public boolean isDisabled(Ticket ticket) {
-        if(ticket.getStatus().equals(Ticket.STATUS_DISABLED)){
+        if (ticket.getStatus().equals(Ticket.STATUS_DISABLED)) {
             return true;
         }
         long difference = DateHelper.getDateDiff(ticket.getTicketId().getTimestamp(),
@@ -209,13 +208,11 @@ public class TicketController implements Serializable {
     }
 
     public List<Ticket> getItems() {
-        if (items == null) {
-            items = getFacade().findAll();
-        }
-        if (!initialized && session.getAttribute("user") != null
+        if (session.getAttribute("user") != null
                 && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
             items = getFacade().getTicketsByRegisteredUser((RegisteredUser) session.getAttribute("user"));
-            initialized = true;
+        } else {
+            items = getFacade().findAll();
         }
         return items;
     }

@@ -36,4 +36,9 @@ public class ImageEventFacade extends AbstractFacade<ImageEvent> {
                 .setParameter("event", event).getResultList();
     }
 
+    public List<ImageEvent> getActiveByEvent(Event event) {
+        return em.createQuery("select ie from ImageEvent ie where ie.event = :event and ie.activated = true")
+                .setParameter("event", event).getResultList();
+    }
+
 }

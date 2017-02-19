@@ -4,6 +4,7 @@ import Entities.ImageEvent;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
 import Entities.Event;
+import Entities.RegisteredUser;
 import Utils.ImageEventFacade;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.faces.event.PhaseId;
+import javax.servlet.http.HttpSession;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -37,7 +39,13 @@ public class ImageEventController implements Serializable {
     private Event eventSelected;
     private ImageEvent selected;
 
+    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+
     public ImageEventController() {
+    }
+
+    public Event getEventSelected() {
+        return eventSelected;
     }
 
     public void setSelected(ImageEvent selected) {
@@ -56,6 +64,13 @@ public class ImageEventController implements Serializable {
 
     private ImageEventFacade getFacade() {
         return ejbFacade;
+    }
+
+    public boolean isEditDisabled() {
+        if (selected == null) {
+            return true;
+        }
+        return selected.isActivated();
     }
 
     public StreamedContent getImage() throws IOException {
@@ -77,6 +92,11 @@ public class ImageEventController implements Serializable {
         ImageEvent imageEvent = new ImageEvent();
         imageEvent.setEvent(eventSelected);
         imageEvent.setData(event.getFile().getContents());
+        if (session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            imageEvent.setActivated(false);
+        } else {
+            imageEvent.setActivated(true);
+        }
         persist(imageEvent, PersistAction.CREATE, message.getSummary());
         items = null;
     }
@@ -86,10 +106,19 @@ public class ImageEventController implements Serializable {
     }
 
     public List<ImageEvent> getItems() {
-        if (items == null) {
+        if (session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            items = getFacade().getActiveByEvent(eventSelected);
+
+        } else {
             items = getFacade().getByEvent(eventSelected);
         }
+
         return items;
+    }
+
+    public void update() {
+        persist(selected, PersistAction.UPDATE, "Image status updated!");
     }
 
     public void destroy() {

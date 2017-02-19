@@ -8,7 +8,6 @@ package Utils;
 import Entities.CommentEvent;
 import Entities.DetailEvent;
 import Entities.Event;
-import Entities.ImageEvent;
 import Entities.RegisteredUser;
 import Entities.Ticket;
 import java.util.List;

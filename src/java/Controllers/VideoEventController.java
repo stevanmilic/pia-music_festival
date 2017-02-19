@@ -45,7 +45,7 @@ public class VideoEventController implements Serializable {
     public void setSelected(VideoEvent selected) {
         this.selected = selected;
     }
-    
+
     public VideoEventController() {
     }
 
@@ -87,9 +87,7 @@ public class VideoEventController implements Serializable {
     }
 
     public List<VideoEvent> getItems() {
-        if (items == null) {
-            items = getFacade().getByEvent(eventSelected);
-        }
+        items = getFacade().getByEvent(eventSelected);
         return items;
     }
 
@@ -99,6 +97,10 @@ public class VideoEventController implements Serializable {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
+    }
+
+    public void update() {
+        persist(selected, PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("RegisteredUserUpdated"));
     }
 
     private void persist(VideoEvent selected, PersistAction persistAction, String successMessage) {

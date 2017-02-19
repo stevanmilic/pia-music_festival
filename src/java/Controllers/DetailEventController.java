@@ -87,9 +87,9 @@ public class DetailEventController implements Serializable {
     }
 
     public List<DetailEvent> getItems() {
-        if (items == null) {
+        //if (items == null) {
             items = getFacade().getByEvent(eventSelected);
-        }
+        //}
         return items;
     }
 

@@ -12,17 +12,8 @@
             <h:form id="ImageEventEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{imageEventController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditImageEventLabel_event}" for="event" />
-                        <p:selectOneMenu id="event" value="#{imageEventController.selected.event}" >
-                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{eventController.itemsAvailableSelectOne}"
-                                           var="eventItem"
-                                           itemValue="#{eventItem}"/>
-                        </p:selectOneMenu>
-                        <p:outputLabel value="#{bundle.EditImageEventLabel_data}" for="data" />
-                        <p:inputTextarea rows="4" cols="30" id="data" value="#{imageEventController.selected.data}" title="#{bundle.EditImageEventTitle_data}" />
-                        <p:outputLabel value="#{bundle.EditImageEventLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{imageEventController.selected.id}" title="#{bundle.EditImageEventTitle_id}" />
+                        <p:outputLabel value="Activate: " for="activated" />
+                        <p:selectBooleanCheckbox id="activated" value="#{imageEventController.selected.activated}" />
                     </p:panelGrid>
                     <p:commandButton actionListener="#{imageEventController.update}" value="#{bundle.Save}" update="display,:ImageEventListForm:datalist,:growl" oncomplete="handleSubmit(args, 'ImageEventEditDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="ImageEventEditDialog.hide()"/>

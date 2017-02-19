@@ -54,7 +54,7 @@ public class EventController implements Serializable {
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 
     public EventController() {
-        //HibernateUtil.getSessionFactory().openSession();
+        HibernateUtil.getSessionFactory().openSession();
     }
 
     public void handleFileUpload(FileUploadEvent fileUploadEvent) {
@@ -179,9 +179,9 @@ public class EventController implements Serializable {
         } else {
             return true;
         }
-        
-        for(CommentEvent commentEvent : getFacade().getCommentsByUser(registeredUser)){
-            if(Objects.equals(commentEvent.getEvent().getId(), selected.getId())){
+
+        for (CommentEvent commentEvent : getFacade().getCommentsByUser(registeredUser)) {
+            if (Objects.equals(commentEvent.getEvent().getId(), selected.getId())) {
                 return true;
             }
         }
@@ -196,6 +196,26 @@ public class EventController implements Serializable {
         }
 
         return true;
+    }
+
+    public boolean isAddingImagesAndVideosDisabled(Event event) {
+        if (session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+
+            RegisteredUser registeredUser = (RegisteredUser) session.getAttribute("user");
+            if (event.getEndDate().before(new Date())) {
+                for (Ticket ticket : getFacade().getTicketsByEvent(event)) {
+                    if (Objects.equals(ticket.getRegisteredUser().getId(), registeredUser.getId())
+                            && ticket.getStatus().equals(Ticket.STATUS_SOLD)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+            
+        } else {
+            return false;
+        }
     }
 
     public void setItems(List<Event> items) {

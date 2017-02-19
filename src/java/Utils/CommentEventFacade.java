@@ -6,7 +6,6 @@
 package Utils;
 
 import Entities.CommentEvent;
-import Entities.Event;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;

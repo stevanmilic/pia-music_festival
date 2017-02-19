@@ -88,9 +88,7 @@ public class CommentEventController implements Serializable {
     }
 
     public List<CommentEvent> getItems() {
-        if (items == null) {
-            items = getFacade().getByEventName(eventSelected.getName());
-        }
+        items = getFacade().getByEventName(eventSelected.getName());
         return items;
     }
 
