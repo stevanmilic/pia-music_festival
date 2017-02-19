@@ -57,6 +57,9 @@
 
                         <p:outputLabel value="#{bundle.CreateEventLabel_youtubeLink}" for="youtubeLink" />
                         <p:inputText id="youtubeLink" value="#{eventController.selected.youtubeLink}" title="#{bundle.CreateEventTitle_youtubeLink}" />
+                        
+                        <p:fileUpload fileUploadListener="#{eventController.handleFileUpload}" mode="advanced"
+                                       update=":growl" allowTypes="/(\.|\/)(csv)$/" />
 
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Cancel}" onclick="EventCreateDialog.hide()"/>

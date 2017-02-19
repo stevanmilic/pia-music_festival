@@ -16,11 +16,11 @@
                         <p:inputText id="performer" value="#{detailEventController.selected.performer}" title="#{bundle.EditDetailEventTitle_performer}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_performer}"/>
 
                         <p:outputLabel value="#{bundle.EditDetailEventLabel_startTime}" for="startTime" />
-                        <p:calendar id="startTime" pattern="dd/MM/yyyy HH:MM:ss a" value="#{detailEventController.selected.startTime}" title="#{bundle.EditDetailEventTitle_startTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_startTime}">
+                        <p:calendar id="startTime" pattern="dd/MM/yyyy hh:mm:ss a" value="#{detailEventController.selected.startTime}" title="#{bundle.EditDetailEventTitle_startTime}" required="true" requiredMessage="#{bundle.EditDetailEventRequiredMessage_startTime}">
                             <p:ajax event="dateSelect" update="endTime"/>
                         </p:calendar>
                         <p:outputLabel value="#{bundle.EditDetailEventLabel_endTime}" for="endTime" />
-                        <p:calendar id="endTime" pattern="dd/MM/yyyy HH:mm:ss a" disabled="#{empty eventController.selected.startDate}" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}" required="true">
+                        <p:calendar id="endTime" pattern="dd/MM/yyyy hh:mm:ss a" disabled="#{empty eventController.selected.startDate}" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}" required="true">
                             <p:ajax event="dateSelect" update="startTime"/>
                         </p:calendar>        
                     </p:panelGrid>

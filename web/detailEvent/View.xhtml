@@ -16,11 +16,11 @@
                         <h:outputText value="#{detailEventController.selected.performer}" title="#{bundle.ViewDetailEventTitle_performer}"/>
                         <h:outputText value="#{bundle.ViewDetailEventLabel_startTime}"/>
                         <h:outputText value="#{detailEventController.selected.startTime}" title="#{bundle.ViewDetailEventTitle_startTime}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                            <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss a" />
                         </h:outputText>
                         <h:outputText value="#{bundle.ViewDetailEventLabel_endTime}"/>
                         <h:outputText value="#{detailEventController.selected.endTime}" title="#{bundle.ViewDetailEventTitle_endTime}">
-                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+                            <f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss a" />
                         </h:outputText>
                         <p:commandButton value="#{bundle.Close}" onclick="DetailEventViewDialog.hide()"/>
                     </p:panelGrid>

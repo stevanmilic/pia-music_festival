@@ -3,13 +3,18 @@ package Controllers;
 import Entities.Event;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
-import Entities.RegisteredUser;
-import Entities.Ticket;
+import Entities.DetailEvent;
 import Entities.util.HibernateUtil;
+import Utils.DateHelper;
 import Utils.EventFacade;
+import Utils.InputHelper;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.text.ParseException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -19,11 +24,16 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.primefaces.event.FileUploadEvent;
 
 @Named("eventController")
 @SessionScoped
@@ -40,6 +50,84 @@ public class EventController implements Serializable {
 
     public EventController() {
         //HibernateUtil.getSessionFactory().openSession();
+    }
+
+    public void handleFileUpload(FileUploadEvent fileUploadEvent) {
+        try {
+            FacesMessage message = new FacesMessage("Succesful", fileUploadEvent.getFile().getFileName() + " is uploaded.");
+
+            String[] tables = InputHelper.convertStreamToString(fileUploadEvent.getFile().getInputstream()).split("\n\n");
+
+            if (tables.length != 4) {
+                JsfUtil.addErrorMessage("Wrong formated csv file, not enough tables!");
+            } else {
+
+                Event event = new Event();
+
+                for (int index = 0; index < tables.length; index++) {
+                    Iterable<CSVRecord> records = CSVParser.parse(tables[index].replace("\", ", "\","), CSVFormat.RFC4180.withFirstRecordAsHeader());
+                    for (CSVRecord record : records) {
+                        switch (index) {
+                            case 0: {
+                                event.setName(record.get("Festival"));
+                                event.setPlace(record.get("Place"));
+                                event.setStartDate(DateHelper.getDateFromString(record.get("StartDate")));
+                                event.setEndDate(DateHelper.getDateFromString(record.get("EndDate")));
+                                break;
+                            }
+                            case 1: {
+                                switch (record.get("TicketType")) {
+                                    case "per day":
+                                        event.setPricePerDay(Integer.parseInt(record.get("Price")));
+                                        break;
+                                    case "whole festival":
+                                        event.setPriceForWhole(Integer.parseInt(record.get("Price")));
+                                        break;
+                                    default:
+                                        //error
+                                        break;
+                                }
+                                break;
+                            }
+                            case 2: {
+                                DetailEvent detailEvent = new DetailEvent();
+                                detailEvent.setPerformer(record.get("Performer"));
+                                detailEvent.setStartTime(DateHelper.getTimestampFromString(record.get("StartDate") + " " + record.get("StartTime")));
+                                detailEvent.setEndTime(DateHelper.getTimestampFromString(record.get("EndDate") + " " + record.get("EndTime")));
+                                detailEvent.setEvent(event);
+                                //persist(detailEvent)
+                                break;
+                            }
+                            case 3: {
+                                switch (record.get("Social Network")) {
+                                    case "Facebook":
+                                        event.setFacebookLink(record.get("Link"));
+                                        break;
+                                    case "Twitter":
+                                        event.setTwitterLink(record.get("Link"));
+                                        break;
+                                    case "Instragram":
+                                        event.setInstagramLink(record.get("Link"));
+                                        break;
+                                    case "YouTube":
+                                        event.setYoutubeLink(record.get("Link"));
+                                        break;
+                                    default:
+                                        //error
+                                        break;
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+            }
+        } catch (IOException iOException) {
+            JsfUtil.addErrorMessage(iOException, "Wrong formated csv file!");
+        } catch (ParseException parseException) {
+            JsfUtil.addErrorMessage(parseException, "Wrong formated csv file!");
+        }
     }
 
     public List<Event> getFilteredItems() {
@@ -174,6 +262,7 @@ public class EventController implements Serializable {
 
     public List<Event> getItemsAvailableSelectOne() {
         return getFacade().findAll();
+
     }
 
     @FacesConverter(forClass = Event.class)
