@@ -31,7 +31,7 @@
                         <p:ajax event="rowUnselect" update="createButton deleteButton"/>
 
                         <p:column style="text-align: center">
-                            <p:media value="#{videoEventController.video}" width="300" height="300" player="flash">
+                            <p:media value="#{videoEventController.video}" width="300" height="300" player="quicktime">
                                 <f:param name="itemId" value="#{item.id}"/>
                             </p:media>
                         </p:column>

@@ -10,7 +10,7 @@
 
         <p:dialog id="DetailEventCreateDlg" widgetVar="DetailEventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateDetailEventTitle}">
             <h:form id="DetailEventCreateForm">
-                <p:steps activeIndex="1" styleClass="custom" readonly="false">
+                <p:steps activeIndex="1" styleClass="custom" readonly="false" rendered="#{empty detailPage}">
                     <p:menuitem value="Definition" url="#"/>
                     <p:menuitem value="Details" url="#"/>
                     <p:menuitem value="Images" url="#"/>

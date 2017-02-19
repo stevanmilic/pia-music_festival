@@ -10,7 +10,7 @@
 
         <p:dialog id="VideoEventCreateDlg" widgetVar="VideoEventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateVideoEventTitle}">
             <h:form id="VideoEventCreateForm">
-                <p:steps activeIndex="3" styleClass="custom" readonly="false">
+                <p:steps activeIndex="3" styleClass="custom" readonly="false" rendered="#{empty videoPage}">
                     <p:menuitem value="Definition" url="#"/>
                     <p:menuitem value="Details" url="#"/>
                     <p:menuitem value="Images" url="#"/>

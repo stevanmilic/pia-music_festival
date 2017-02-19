@@ -10,7 +10,7 @@
 
         <p:dialog id="ImageEventCreateDlg" widgetVar="ImageEventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateImageEventTitle}">
             <h:form id="ImageEventCreateForm">
-                <p:steps activeIndex="2" styleClass="custom" readonly="false">
+                <p:steps activeIndex="2" styleClass="custom" readonly="false" rendered="#{empty imagePager}">
                     <p:menuitem value="Definition" url="#"/>
                     <p:menuitem value="Details" url="#"/>
                     <p:menuitem value="Images" url="#"/>

@@ -36,14 +36,25 @@ public class VideoEvent implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     @Lob
-    @Column(name="data_video")
+    @Column(name = "data_video")
     private byte[] data;
-            
+
+    @Column(name = "activated")
+    private boolean activated;
+
     @ManyToOne
-    @JoinColumn(name="fK_event_video")
+    @JoinColumn(name = "fK_event_video")
     private Event event;
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
 
     public Event getEvent() {
         return event;
@@ -52,8 +63,7 @@ public class VideoEvent implements Serializable {
     public void setEvent(Event event) {
         this.event = event;
     }
-    
-    
+
     public byte[] getData() {
         return data;
     }
@@ -61,7 +71,7 @@ public class VideoEvent implements Serializable {
     public void setData(byte[] data) {
         this.data = data;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -86,5 +96,5 @@ public class VideoEvent implements Serializable {
     public String toString() {
         return "Entities.VideoEvent[ id=" + id + " ]";
     }
-    
+
 }

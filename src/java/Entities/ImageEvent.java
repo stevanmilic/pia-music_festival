@@ -21,17 +21,32 @@ import javax.persistence.Table;
  * @author stevan
  */
 @Entity
-@Table(name="event_image")
+@Table(name = "event_image")
 public class ImageEvent implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
+
     @ManyToOne
-    @JoinColumn(name="fk_event_image")
+    @JoinColumn(name = "fk_event_image")
     private Event event;
+
+    @Lob
+    @Column(name = "data_image")
+    private byte[] data;
+    
+    @Column(name = "activated")
+    private boolean activated;
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
 
     public Event getEvent() {
         return event;
@@ -48,8 +63,7 @@ public class ImageEvent implements Serializable {
     public void setData(byte[] data) {
         this.data = data;
     }
-    
-    
+
     public Long getId() {
         return id;
     }
@@ -57,10 +71,6 @@ public class ImageEvent implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    
-    @Lob
-    @Column(name="data_image")
-    private byte[] data;
 
     @Override
     public int hashCode() {
@@ -86,5 +96,5 @@ public class ImageEvent implements Serializable {
     public String toString() {
         return "Entities.EventImage[ id=" + id + " ]";
     }
-    
+
 }
