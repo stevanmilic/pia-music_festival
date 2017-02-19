@@ -24,6 +24,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.faces.event.PhaseId;
+import javax.servlet.http.HttpSession;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
@@ -38,12 +39,18 @@ public class VideoEventController implements Serializable {
     private Event eventSelected;
     private VideoEvent selected;
 
+    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+
     public VideoEvent getSelected() {
         return selected;
     }
 
     public void setSelected(VideoEvent selected) {
         this.selected = selected;
+    }
+
+    public Event getEventSelected() {
+        return eventSelected;
     }
 
     public VideoEventController() {
@@ -59,6 +66,13 @@ public class VideoEventController implements Serializable {
         return ejbFacade;
     }
 
+    public boolean isEditDisabled() {
+        if (selected == null) {
+            return true;
+        }
+        return selected.isActivated();
+    }
+
     public StreamedContent getVideo() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -69,7 +83,7 @@ public class VideoEventController implements Serializable {
             // So, browser is requesting the video. Return a real StreamedContent with the video bytes.
             String itemId = context.getExternalContext().getRequestParameterMap().get("itemId");
             VideoEvent videoEvent = getFacade().find(Long.valueOf(itemId));
-            return new DefaultStreamedContent(new ByteArrayInputStream(videoEvent.getData()), "video/flash");
+            return new DefaultStreamedContent(new ByteArrayInputStream(videoEvent.getData()), "video/quicktime");
         }
     }
 
@@ -78,6 +92,11 @@ public class VideoEventController implements Serializable {
         VideoEvent videoEvent = new VideoEvent();
         videoEvent.setEvent(eventSelected);
         videoEvent.setData(event.getFile().getContents());
+        if (session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            videoEvent.setActivated(false);
+        } else {
+            videoEvent.setActivated(true);
+        }
         persist(videoEvent, PersistAction.CREATE, message.getSummary());
         items = null;
     }
@@ -87,7 +106,13 @@ public class VideoEventController implements Serializable {
     }
 
     public List<VideoEvent> getItems() {
-        items = getFacade().getByEvent(eventSelected);
+        if (session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            items = getFacade().getActiveByEvent(eventSelected);
+
+        } else {
+            items = getFacade().getByEvent(eventSelected);
+        }
         return items;
     }
 
@@ -100,7 +125,7 @@ public class VideoEventController implements Serializable {
     }
 
     public void update() {
-        persist(selected, PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("RegisteredUserUpdated"));
+        persist(selected, PersistAction.UPDATE, "Video status is updated!");
     }
 
     private void persist(VideoEvent selected, PersistAction persistAction, String successMessage) {

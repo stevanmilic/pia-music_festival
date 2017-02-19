@@ -12,17 +12,8 @@
             <h:form id="VideoEventEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{videoEventController.selected != null}">
-                        <p:outputLabel value="#{bundle.EditVideoEventLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{videoEventController.selected.id}" title="#{bundle.EditVideoEventTitle_id}" />
-                        <p:outputLabel value="#{bundle.EditVideoEventLabel_event}" for="event" />
-                        <p:selectOneMenu id="event" value="#{videoEventController.selected.event}" >
-                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{eventController.itemsAvailableSelectOne}"
-                                           var="eventItem"
-                                           itemValue="#{eventItem}"/>
-                        </p:selectOneMenu>
-                        <p:outputLabel value="#{bundle.EditVideoEventLabel_data}" for="data" />
-                        <p:inputTextarea rows="4" cols="30" id="data" value="#{videoEventController.selected.data}" title="#{bundle.EditVideoEventTitle_data}" />
+                        <p:outputLabel value="Activate: " for="activated" />
+                        <p:selectBooleanCheckbox id="activated" value="#{videoEventController.selected.activated}" />
                     </p:panelGrid>
                     <p:commandButton actionListener="#{videoEventController.update}" value="#{bundle.Save}" update="display,:VideoEventListForm:datalist,:growl" oncomplete="handleSubmit(args, 'VideoEventEditDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="VideoEventEditDialog.hide()"/>

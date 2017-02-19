@@ -27,8 +27,8 @@
                                  style="width:400px; margin: 0 auto;"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton deleteButton"/>
+                        <p:ajax event="rowSelect"   update="editButton createButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="editButton createButton deleteButton"/>
 
                         <p:column style="text-align: center">
                             <p:media value="#{videoEventController.video}" width="300" height="300" player="quicktime">
@@ -38,14 +38,20 @@
 
 
                         <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" oncomplete="PF('VideoEventCreateDialog').show()"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{videoEventController.destroy}" update=":growl,datalist" disabled="#{empty videoEventController.selected}"/>
+                            <p:commandButton rendered="#{not empty user}" disabled="#{eventController.isAddingImagesAndVideosDisabled(videoEventController.eventSelected)}" 
+                                             id="createButton" icon="ui-icon-plus" value="#{bundle.Create}" oncomplete="PF('VideoEventCreateDialog').show()"/>
+                            <p:commandButton update=":VideoEventEditForm" rendered="#{user['class'].simpleName eq 'AdminUser'}" 
+                                             disabled="#{videoEventController.editDisabled}"
+                                             id="editButton" icon="ui-icon-plus" value="#{bundle.Edit}" 
+                                             oncomplete="PF('VideoEventEditDialog').show()"/>
+                            <p:commandButton rendered="#{user['class'].simpleName eq 'AdminUser'}" id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{videoEventController.destroy}" update=":growl,datalist" disabled="#{empty videoEventController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
 
             <ui:include src="Create.xhtml"/>
+            <ui:include src="Edit.xhtml"/>
         </ui:define>
     </ui:composition>
 

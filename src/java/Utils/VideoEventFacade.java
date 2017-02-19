@@ -6,6 +6,7 @@
 package Utils;
 
 import Entities.Event;
+import Entities.ImageEvent;
 import Entities.VideoEvent;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -33,6 +34,11 @@ public class VideoEventFacade extends AbstractFacade<VideoEvent> {
 
     public List<VideoEvent> getByEvent(Event event) {
         return em.createQuery("select ve from VideoEvent ve where ve.event = :event")
+                .setParameter("event", event).getResultList();
+    }
+
+    public List<VideoEvent> getActiveByEvent(Event event) {
+        return em.createQuery("select ve from VideoEvent ve where ve.event = :event and ve.activated = true")
                 .setParameter("event", event).getResultList();
     }
 

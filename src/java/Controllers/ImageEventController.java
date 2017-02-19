@@ -4,7 +4,6 @@ import Entities.ImageEvent;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
 import Entities.Event;
-import Entities.RegisteredUser;
 import Utils.ImageEventFacade;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

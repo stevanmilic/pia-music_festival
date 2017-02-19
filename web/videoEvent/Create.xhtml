@@ -21,6 +21,7 @@
                 <p:growl id="messages" showDetail="true" />
 
                 <p:commandButton rendered="#{empty videoPage}" value="#{bundle.Done}" onclick="VideoEventCreateDialog.hide()"/>
+                <p:commandButton rendered="#{empty imagePage}" value="#{bundle.Done}" onclick="VideoEventCreateDialog.hide()" immediate="true"/>
                 <p:commandButton rendered="#{not empty videoPage}" value="#{bundle.Create}" onclick="VideoEventCreateDialog.hide()" update=":growl,:VideoEventListForm:datalist"/>
             </h:form>
         </p:dialog>
