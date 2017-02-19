@@ -6,6 +6,8 @@
 package Utils;
 
 import Entities.CommentEvent;
+import Entities.Event;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,5 +30,10 @@ public class CommentEventFacade extends AbstractFacade<CommentEvent> {
     public CommentEventFacade() {
         super(CommentEvent.class);
     }
-    
+
+    public List<CommentEvent> getByEventName(String eventName) {
+        return em.createQuery("select ce from CommentEvent ce where ce.event.name = :eventName")
+                .setParameter("eventName", eventName).getResultList();
+    }
+
 }

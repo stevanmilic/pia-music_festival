@@ -7,6 +7,7 @@ package Entities;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
@@ -57,6 +58,39 @@ public class TicketId implements Serializable {
     @Override
     public String toString() {
         return "TicketId{" + "timestamp=" + timestamp + ", eventId=" + eventId + ", userId=" + userId + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.timestamp);
+        hash = 59 * hash + (int) (this.eventId ^ (this.eventId >>> 32));
+        hash = 59 * hash + (int) (this.userId ^ (this.userId >>> 32));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TicketId other = (TicketId) obj;
+        if (this.eventId != other.eventId) {
+            return false;
+        }
+        if (this.userId != other.userId) {
+            return false;
+        }
+        if (!Objects.equals(this.timestamp, other.timestamp)) {
+            return false;
+        }
+        return true;
     }
     
     

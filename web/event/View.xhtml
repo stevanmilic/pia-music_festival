@@ -12,12 +12,7 @@
             <h:form id="EventViewForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{eventController.selected != null}">
-                        <h:outputText value="#{bundle.ViewEventLabel_visitCount}"/>
-                        <h:outputText value="#{eventController.selected.visitCount}" title="#{bundle.ViewEventTitle_visitCount}"/>
-                        <h:outputText value="#{bundle.ViewEventLabel_maxTicketsPerDay}"/>
-                        <h:outputText value="#{eventController.selected.maxTicketsPerDay}" title="#{bundle.ViewEventTitle_maxTicketsPerDay}"/>
-                        <h:outputText value="#{bundle.ViewEventLabel_maxReservations}"/>
-                        <h:outputText value="#{eventController.selected.maxReservations}" title="#{bundle.ViewEventTitle_maxReservations}"/>
+
                         <h:outputText value="#{bundle.ViewEventLabel_name}"/>
                         <h:outputText value="#{eventController.selected.name}" title="#{bundle.ViewEventTitle_name}"/>
                         <h:outputText value="#{bundle.ViewEventLabel_startDate}"/>
@@ -33,6 +28,15 @@
 
                         <h:outputText value="#{bundle.ViewEventLabel_priceForWhole}" />
                         <h:outputText value="#{eventController.selected.priceForWhole}" title="#{bundle.ViewEventTitle_priceForWhole}"/>
+
+                        <h:outputText value="#{bundle.ViewEventLabel_maxTicketsPerDay}"  rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
+                        <h:outputText value="#{eventController.selected.maxTicketsPerDay}" title="#{bundle.ViewEventTitle_maxTicketsPerDay}"  rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
+
+                        <h:outputText value="#{bundle.ViewEventLabel_maxReservations}"/>
+                        <h:outputText value="#{eventController.selected.maxReservations}" title="#{bundle.ViewEventTitle_maxReservations}"/>
+
+                        <h:outputText value="#{bundle.ViewEventLabel_visitCount}" rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
+                        <h:outputText value="#{eventController.selected.visitCount}" title="#{bundle.ViewEventTitle_visitCount}"  rendered="#{user['class'].simpleName eq 'AdminUser'}"/>
 
                         <h:outputText value="#{bundle.ViewEventLabel_facebookLink}" />
                         <h:outputText value="#{eventController.selected.facebookLink}" title="#{bundle.ViewEventTitle_facebookLink}"/>

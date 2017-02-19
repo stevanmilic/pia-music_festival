@@ -3,6 +3,8 @@ package Controllers;
 import Entities.CommentEvent;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.Event;
+import Entities.RegisteredUser;
 import Utils.CommentEventFacade;
 
 import java.io.Serializable;
@@ -27,6 +29,11 @@ public class CommentEventController implements Serializable {
     private Utils.CommentEventFacade ejbFacade;
     private List<CommentEvent> items = null;
     private CommentEvent selected;
+    private Event eventSelected;
+
+    public Event getEventSelected() {
+        return eventSelected;
+    }
 
     public CommentEventController() {
     }
@@ -49,8 +56,10 @@ public class CommentEventController implements Serializable {
         return ejbFacade;
     }
 
-    public CommentEvent prepareCreate() {
+    public CommentEvent prepareCreate(RegisteredUser registeredUser, Event event) {
         selected = new CommentEvent();
+        selected.setEvent(event);
+        selected.setRegisteredUser(registeredUser);
         initializeEmbeddableKey();
         return selected;
     }
@@ -74,9 +83,13 @@ public class CommentEventController implements Serializable {
         }
     }
 
+    public void setEventSelected(Event event) {
+        eventSelected = event;
+    }
+
     public List<CommentEvent> getItems() {
         if (items == null) {
-            items = getFacade().findAll();
+            items = getFacade().getByEventName(eventSelected.getName());
         }
         return items;
     }

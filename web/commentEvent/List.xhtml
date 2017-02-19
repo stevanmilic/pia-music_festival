@@ -24,26 +24,14 @@
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  >
 
-                        <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton"/>
-                        <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+                        <p:ajax event="rowSelect"   update="viewButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="viewButton deleteButton"/>
 
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCommentEventTitle_id}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.id}"/>
-                        </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCommentEventTitle_serialVersionUID}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.serialVersionUID}"/>
-                        </p:column>
                         <p:column>
                             <f:facet name="header">
                                 <h:outputText value="#{bundle.ListCommentEventTitle_registeredUser}"/>
                             </f:facet>
-                            <h:outputText value="#{item.registeredUser}"/>
+                            <h:outputText value="#{item.registeredUser.userName}"/>
                         </p:column>
                         <p:column>
                             <f:facet name="header">
@@ -51,24 +39,14 @@
                             </f:facet>
                             <h:outputText value="#{item.text}"/>
                         </p:column>
-                        <p:column>
-                            <f:facet name="header">
-                                <h:outputText value="#{bundle.ListCommentEventTitle_event}"/>
-                            </f:facet>
-                            <h:outputText value="#{item.event}"/>
-                        </p:column>
-                        <f:facet name="footer">
-                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{commentEventController.prepareCreate}" update=":CommentEventCreateForm" oncomplete="PF('CommentEventCreateDialog').show()"/>
+                        <f:facet name="footer">    
                             <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":CommentEventViewForm" oncomplete="PF('CommentEventViewDialog').show()" disabled="#{empty commentEventController.selected}"/>
-                            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":CommentEventEditForm" oncomplete="PF('CommentEventEditDialog').show()" disabled="#{empty commentEventController.selected}"/>
-                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{commentEventController.destroy}" update=":growl,datalist" disabled="#{empty commentEventController.selected}"/>
+                            <p:commandButton id="deleteButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{commentEventController.destroy}" update=":growl,datalist" disabled="#{empty commentEventController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
 
-            <ui:include src="Create.xhtml"/>
-            <ui:include src="Edit.xhtml"/>
             <ui:include src="View.xhtml"/>
         </ui:define>
     </ui:composition>

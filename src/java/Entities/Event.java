@@ -65,7 +65,7 @@ public class Event implements Serializable {
     private int visitCount = 0;
     
     @Column(name="rating")
-    private double rating = 0;
+    private int rating = 0;
     
     @Column(name="link_facebook")
     private String facebookLink;
@@ -78,6 +78,8 @@ public class Event implements Serializable {
     
     @Column(name="link_youtube")
     private String youtubeLink;
+    
+    
 
     public String getFacebookLink() {
         return facebookLink;
@@ -126,11 +128,11 @@ public class Event implements Serializable {
     @OneToMany(mappedBy = "event", cascade=CascadeType.REMOVE)
     private List<Ticket> tickets;
 
-    public double getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 

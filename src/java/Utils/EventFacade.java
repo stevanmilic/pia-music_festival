@@ -5,8 +5,12 @@
  */
 package Utils;
 
+import Entities.CommentEvent;
 import Entities.DetailEvent;
 import Entities.Event;
+import Entities.ImageEvent;
+import Entities.RegisteredUser;
+import Entities.Ticket;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -31,18 +35,32 @@ public class EventFacade extends AbstractFacade<Event> {
     public EventFacade() {
         super(Event.class);
     }
-    
-    public List<Event> getTopRatedEvents(){
+
+    public List<Event> getTopRatedEvents() {
         return em.createQuery("select e from Event e order by e.rating desc").setMaxResults(5).getResultList();
     }
-    
-    public List<Event> getRecentEvents(){
-        Query query = em.createNativeQuery("SELECT * FROM event WHERE NOW() < end_date ORDER BY ABS(DATEDIFF(start_date, NOW())) LIMIT 5", Event.class);
-        return query.getResultList();
+
+    public List<Event> getRecentEvents() {
+        Query nativeQuery = em.createNativeQuery("SELECT * FROM event WHERE NOW() < end_date ORDER BY ABS(DATEDIFF(start_date, NOW())) LIMIT 5", Event.class);
+        return nativeQuery.getResultList();
     }
-    
-    public void persistDetailEvent(DetailEvent detailEvent){
+
+    public List<Event> getAllEvents() {
+        return em.createQuery("select e from Event e").getResultList();
+    }
+
+    public void persistDetailEvent(DetailEvent detailEvent) {
         em.persist(detailEvent);
     }
-    
+
+    public List<Ticket> getTicketsByEvent(Event event) {
+        return em.createQuery("select t from Ticket t where t.event = :event")
+                .setParameter("event", event).getResultList();
+    }
+
+    public List<CommentEvent> getCommentsByUser(RegisteredUser registeredUser) {
+        return em.createQuery("select ce from CommentEvent ce where ce.registeredUser = :registeredUser")
+                .setParameter("registeredUser", registeredUser).getResultList();
+    }
+
 }

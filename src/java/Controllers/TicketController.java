@@ -33,7 +33,7 @@ import javax.servlet.http.HttpSession;
 public class TicketController implements Serializable {
 
     static final int DEADLINE_FOR_BOOKING = 2;
-    static final TimeUnit DEADLINE_TIMEUNIT = TimeUnit.MINUTES;
+    static final TimeUnit DEADLINE_TIMEUNIT = TimeUnit.DAYS;
 
     @EJB
     private Utils.TicketFacade ejbFacade;

@@ -3,7 +3,10 @@ package Controllers;
 import Entities.Event;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.CommentEvent;
 import Entities.DetailEvent;
+import Entities.RegisteredUser;
+import Entities.Ticket;
 import Entities.util.HibernateUtil;
 import Utils.DateHelper;
 import Utils.EventFacade;
@@ -12,8 +15,10 @@ import java.io.IOException;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +45,7 @@ public class EventController implements Serializable {
     private List<Event> items = null;
     private List<Event> filteredItems = null;
     private Event selected;
+    private int rating = 0;
     private boolean initialized = false;
 
     public static final int MAX_RESERVATIONS_PER_DAY = 5;
@@ -151,6 +157,47 @@ public class EventController implements Serializable {
         return filteredItems;
     }
 
+    public boolean isBookingDisabled() {
+        if (selected == null) {
+            return true;
+        }
+        if (selected.getEndDate().before(new Date())) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isAddingCommentDisabled() {
+        if (selected == null) {
+            return true;
+        }
+
+        RegisteredUser registeredUser;
+        if (session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            registeredUser = (RegisteredUser) session.getAttribute("user");
+        } else {
+            return true;
+        }
+        
+        for(CommentEvent commentEvent : getFacade().getCommentsByUser(registeredUser)){
+            if(Objects.equals(commentEvent.getEvent().getId(), selected.getId())){
+                return true;
+            }
+        }
+
+        if (selected.getEndDate().before(new Date())) {
+            for (Ticket ticket : getFacade().getTicketsByEvent(selected)) {
+                if (Objects.equals(ticket.getRegisteredUser().getId(), registeredUser.getId())
+                        && ticket.getStatus().equals(Ticket.STATUS_SOLD)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public void setItems(List<Event> items) {
         this.items = items;
     }
@@ -203,7 +250,18 @@ public class EventController implements Serializable {
         }
     }
 
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
     public void update() {
+        if (rating != 0) {
+            selected.setRating((selected.getRating() + rating) / (selected.getComments().size()));
+        }
         persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("EventUpdated"));
     }
 
@@ -228,7 +286,7 @@ public class EventController implements Serializable {
     }
 
     public void setDefaultItems() {
-        items = getFacade().findAll();
+        items = getFacade().getAllEvents();
     }
 
     public void setTopRatedItems() {

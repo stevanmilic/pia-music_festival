@@ -11,27 +11,15 @@
         <p:dialog id="CommentEventCreateDlg" widgetVar="CommentEventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateCommentEventTitle}">
             <h:form id="CommentEventCreateForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{commentEventController.selected != null}">
-                        <p:outputLabel value="#{bundle.CreateCommentEventLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{commentEventController.selected.id}" title="#{bundle.CreateCommentEventTitle_id}" />
-                        <p:outputLabel value="#{bundle.CreateCommentEventLabel_serialVersionUID}" for="serialVersionUID" />
-                        <p:inputText id="serialVersionUID" value="#{commentEventController.selected.serialVersionUID}" title="#{bundle.CreateCommentEventTitle_serialVersionUID}" />
-                        <p:outputLabel value="#{bundle.CreateCommentEventLabel_registeredUser}" for="registeredUser" />
-                        <p:selectOneMenu id="registeredUser" value="#{commentEventController.selected.registeredUser}" >
-                            <f:selectItems value="#{registeredUserController.itemsAvailableSelectOne}"
-                                           var="registeredUserItem"
-                                           itemValue="#{registeredUserItem}"/>
-                        </p:selectOneMenu>
-                        <p:outputLabel value="#{bundle.CreateCommentEventLabel_text}" for="text" />
-                        <p:inputText id="text" value="#{commentEventController.selected.text}" title="#{bundle.CreateCommentEventTitle_text}" />
-                        <p:outputLabel value="#{bundle.CreateCommentEventLabel_event}" for="event" />
-                        <p:selectOneMenu id="event" value="#{commentEventController.selected.event}" >
-                            <f:selectItems value="#{eventController.itemsAvailableSelectOne}"
-                                           var="eventItem"
-                                           itemValue="#{eventItem}"/>
-                        </p:selectOneMenu>
+                    <p:panelGrid columns="2" rendered="#{commentEventController.selected != null}">       
+                        <p:outputLabel value="#{bundle.EditCommentEventLabel_text}" for="text" />
+                        <p:inputTextarea id="text" value="#{commentEventController.selected.text}" required="true" title="#{bundle.EditCommentEventTitle_text}" rows="10" cols="50" completeMethod="#{inputTextareaView.completeArea}" queryDelay="750" minQueryLength="4" />
+                        <h:outputText value="Rate event:" />
+                        <p:rating value="#{eventController.rating}" stars="10" cancel="false" required="true"/>
                     </p:panelGrid>
-                    <p:commandButton actionListener="#{commentEventController.create}" value="#{bundle.Save}" update="display,:CommentEventListForm:datalist,:growl" oncomplete="handleSubmit(args,'CommentEventCreateDialog');"/>
+                    <p:commandButton actionListener="#{commentEventController.create}" value="#{bundle.Save}" update="display,:EventListForm:datalist,:growl" oncomplete="handleSubmit(args,'CommentEventCreateDialog');">
+                        <f:actionListener binding="#{eventController.update()}"/>
+                    </p:commandButton>
                     <p:commandButton value="#{bundle.Cancel}" onclick="CommentEventCreateDialog.hide()"/>
                 </h:panelGroup>
             </h:form>

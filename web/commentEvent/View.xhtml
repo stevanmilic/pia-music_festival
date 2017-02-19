@@ -11,17 +11,9 @@
         <p:dialog id="CommentEventViewDlg" widgetVar="CommentEventViewDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.ViewCommentEventTitle}">
             <h:form id="CommentEventViewForm">
                 <h:panelGroup id="display">
-                    <p:panelGrid columns="2" rendered="#{commentEventController.selected != null}">
-                        <h:outputText value="#{bundle.ViewCommentEventLabel_id}"/>
-                        <h:outputText value="#{commentEventController.selected.id}" title="#{bundle.ViewCommentEventTitle_id}"/>
-                        <h:outputText value="#{bundle.ViewCommentEventLabel_serialVersionUID}"/>
-                        <h:outputText value="#{commentEventController.selected.serialVersionUID}" title="#{bundle.ViewCommentEventTitle_serialVersionUID}"/>
-                        <h:outputText value="#{bundle.ViewCommentEventLabel_registeredUser}"/>
-                        <h:outputText value="#{commentEventController.selected.registeredUser}" title="#{bundle.ViewCommentEventTitle_registeredUser}"/>
+                    <p:panelGrid columns="2" rendered="#{commentEventController.selected != null}">                
                         <h:outputText value="#{bundle.ViewCommentEventLabel_text}"/>
                         <h:outputText value="#{commentEventController.selected.text}" title="#{bundle.ViewCommentEventTitle_text}"/>
-                        <h:outputText value="#{bundle.ViewCommentEventLabel_event}"/>
-                        <h:outputText value="#{commentEventController.selected.event}" title="#{bundle.ViewCommentEventTitle_event}"/>
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Close}" onclick="CommentEventViewDialog.hide()"/>
                 </h:panelGroup>
