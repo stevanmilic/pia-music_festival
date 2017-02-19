@@ -10,6 +10,12 @@
 
         <p:dialog id="EventCreateDlg" widgetVar="EventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateEventTitle}">
             <h:form id="EventCreateForm">
+                <p:steps activeIndex="0" styleClass="custom" readonly="false">
+                    <p:menuitem value="Definition" url="#"/>
+                    <p:menuitem value="Details" url="#"/>
+                    <p:menuitem value="Images" url="#"/>
+                    <p:menuitem value="Videos" url="#"/>
+                </p:steps>
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{eventController.selected != null}">
                         <p:outputLabel value="#{bundle.CreateEventLabel_name}" for="name" />
@@ -36,28 +42,28 @@
 
                         <p:outputLabel value="#{bundle.CreateEventLabel_pricePerDay}" for="pricePerDay" />
                         <p:inputText id="pricePerDay" value="#{eventController.selected.pricePerDay}" title="#{bundle.CreateEventTitle_pricePerDay}" required="true" requiredMessage="#{bundle.CreateEventRequiredMessage_pricePerDay}"/>
-                        
+
                         <p:outputLabel value="#{bundle.CreateEventLabel_priceForWhole}" for="priceForWhole" />
                         <p:inputText id="priceForWhole" value="#{eventController.selected.priceForWhole}" title="#{bundle.CreateEventTitle_priceForWhole}" required="true" requiredMessage="#{bundle.CreateEventRequiredMessage_priceForWhole}"/>
-                        
+
                         <p:outputLabel value="#{bundle.CreateEventLabel_facebookLink}" for="facebookLink" />
                         <p:inputText id="facebookLink" value="#{eventController.selected.facebookLink}" title="#{bundle.CreateEventTitle_facebookLink}" />
-                        
+
                         <p:outputLabel value="#{bundle.CreateEventLabel_twitterLink}" for="twitterLink" />
                         <p:inputText id="twitterLink" value="#{eventController.selected.twitterLink}" title="#{bundle.CreateEventTitle_twitterLink}" />
-                        
+
                         <p:outputLabel value="#{bundle.CreateEventLabel_instagramLink}" for="instagramLink" />
                         <p:inputText id="instagramLink" value="#{eventController.selected.instagramLink}" title="#{bundle.CreateEventTitle_instagramLink}" />
-                        
+
                         <p:outputLabel value="#{bundle.CreateEventLabel_youtubeLink}" for="youtubeLink" />
                         <p:inputText id="youtubeLink" value="#{eventController.selected.youtubeLink}" title="#{bundle.CreateEventTitle_youtubeLink}" />
 
                     </p:panelGrid>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="EventCreateDialog.hide()"/>
                     <p:commandButton value="#{bundle.Next}" actionListener="#{eventController.create}" update="display,:growl,:DetailEventCreateForm" oncomplete="handleSubmit(args,'EventCreateDialog');PF('DetailEventCreateDialog').show();">
                         <f:actionListener binding="#{detailEventController.setEventSelected(eventController.selected)}"/>
                         <f:actionListener binding="#{detailEventController.prepareCreate()}"/>
                     </p:commandButton>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="EventCreateDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>

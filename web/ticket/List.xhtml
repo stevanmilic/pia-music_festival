@@ -14,7 +14,10 @@
         </ui:define>
 
         <ui:define name="body">
+
             <h:form id="TicketListForm">
+                <p:remoteCommand name="onInteraction" actionListener="#{ticketController.updateTickets()}"
+                                 update=":TicketListForm:datalist,:growl"/>
                 <p:panel header="#{bundle.ListTicketTitle}">
                     <p:dataTable id="datalist" value="#{ticketController.items}" var="item"
                                  selectionMode="single" selection="#{ticketController.selected}"
@@ -22,10 +25,12 @@
                                  rowKey="#{item.ticketId}"
                                  rows="10"
                                  rowsPerPageTemplate="10,20,30,40,50"
+                                 rowStyleClass="#{item.status.equals(item.STATUS_BOOKED) ? 'booked' 
+                                                  : item.status.equals(item.STATUS_SOLD) ? 'sold' : 'disabled'}"
                                  >
 
-                        <p:ajax event="rowSelect"   update="editButton "/>
-                        <p:ajax event="rowUnselect" update="editButton "/>
+                        <p:ajax event="rowSelect" update="editButton" oncomplete="onInteraction()"/>
+                        <p:ajax event="rowUnselect" update="editButton" oncomplete="onInteraction()"/>
 
                         <p:column rendered="#{user['class'].simpleName eq 'AdminUser'}">
                             <f:facet name="header">
@@ -63,11 +68,12 @@
                             <f:facet name="header">
                                 <h:outputText value="Day Ticket Date"/>
                             </f:facet>
-                            <h:outputText value="#{item.dayEvent}" />
+                            <h:outputText value="#{item.dayEvent}"/>
                         </p:column>
 
                         <f:facet name="footer">
-                            <p:commandButton id="editButton" rendered="#{user['class'].simpleName eq 'AdminUser'}" icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TicketEditForm" oncomplete="PF('TicketEditDialog').show()" disabled="#{empty ticketController.selected}"/>
+                            <p:commandButton id="editButton" icon="ui-icon-pencil" value="#{bundle.Edit}" update=":TicketEditForm" oncomplete="PF('TicketEditDialog').show()" 
+                                             disabled="#{ticketController.isEditDisabled()}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>

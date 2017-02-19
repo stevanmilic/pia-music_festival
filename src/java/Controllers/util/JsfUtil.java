@@ -26,6 +26,17 @@ public class JsfUtil {
     public static boolean isValidationFailed() {
         return FacesContext.getCurrentInstance().isValidationFailed();
     }
+    
+    public static void addWarningMessage(List<String> messages){
+        for(String message : messages){
+            addWarningMessage(message);
+        }
+    }
+
+    public static void addWarningMessage(String message) {
+        FacesMessage facesMsg = new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning!", message);
+        FacesContext.getCurrentInstance().addMessage(null, facesMsg);
+    }
 
     public static void addErrorMessage(Exception ex, String defaultMsg) {
         String msg = ex.getLocalizedMessage();

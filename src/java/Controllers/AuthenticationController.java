@@ -74,7 +74,7 @@ public class AuthenticationController implements Serializable {
         for (User user : ejbFacade.findAll()) {
             if (user.getUserName().equals(username) && user.getPassword().equals(password)) {
                 if (user instanceof RegisteredUser && !((RegisteredUser) user).isActivated()) {
-                    errorMessage = "This user is not approved.";
+                    errorMessage = "This user is not activated";
                     break;
                 }
                 errorMessage = null;

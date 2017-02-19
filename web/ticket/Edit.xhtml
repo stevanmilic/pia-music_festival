@@ -13,9 +13,10 @@
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{ticketController.selected != null}">
                         <p:outputLabel value="Status" for="status" />
-                        <p:selectOneMenu id="status" value="#{ticketController.selected.status}" >
+                        <p:selectOneMenu id="status" value="#{ticketController.selected.status}" panelStyleClass="hideDisabled">
                             <f:selectItem itemLabel="Booked" itemValue="#{ticketController.selected.STATUS_BOOKED}"/>
-                            <f:selectItem itemLabel="Sold" itemValue="#{ticketController.selected.STATUS_SOLD}"/>
+                            <f:selectItem itemLabel="Sold" itemValue="#{ticketController.selected.STATUS_SOLD}" itemDisabled="#{user['class'].simpleName eq 'RegisteredUser'}"/>
+                            <f:selectItem itemLabel="Disabled" itemValue="#{ticketController.selected.STATUS_DISABLED}" itemDisabled="#{user['class'].simpleName eq 'AdminUser'}"/>
                         </p:selectOneMenu>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{ticketController.update}" value="#{bundle.Save}" update="display,:TicketListForm:datalist,:growl" oncomplete="handleSubmit(args, 'TicketEditDialog');"/>

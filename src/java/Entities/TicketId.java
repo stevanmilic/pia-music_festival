@@ -54,4 +54,11 @@ public class TicketId implements Serializable {
         this.timestamp = timestamp;
     }
 
+    @Override
+    public String toString() {
+        return "TicketId{" + "timestamp=" + timestamp + ", eventId=" + eventId + ", userId=" + userId + '}';
+    }
+    
+    
+
 }

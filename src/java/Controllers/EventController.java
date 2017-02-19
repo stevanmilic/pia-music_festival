@@ -3,6 +3,7 @@ package Controllers;
 import Entities.Event;
 import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
+import Entities.RegisteredUser;
 import Entities.Ticket;
 import Entities.util.HibernateUtil;
 import Utils.EventFacade;

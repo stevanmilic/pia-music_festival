@@ -32,6 +32,9 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class TicketController implements Serializable {
 
+    static final int DEADLINE_FOR_BOOKING = 2;
+    static final TimeUnit DEADLINE_TIMEUNIT = TimeUnit.MINUTES;
+
     @EJB
     private Utils.TicketFacade ejbFacade;
     private List<Ticket> items = null;
@@ -41,6 +44,35 @@ public class TicketController implements Serializable {
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 
     public TicketController() {
+    }
+
+    public boolean isEditDisabled() {
+        if (selected == null) {
+            return true;
+        }
+        return !selected.getStatus().equals(Ticket.STATUS_BOOKED);
+    }
+    
+    public void updateTickets(){
+        for(Ticket ticket : items){
+            if(ticket.getStatus().equals(Ticket.STATUS_BOOKED) && isDisabled(ticket)){
+                JsfUtil.addWarningMessage(ticket.toString() + " has been Disabled!");
+            }
+        }
+    }
+
+    public boolean isDisabled(Ticket ticket) {
+        if(ticket.getStatus().equals(Ticket.STATUS_DISABLED)){
+            return true;
+        }
+        long difference = DateHelper.getDateDiff(ticket.getTicketId().getTimestamp(),
+                new Date(), DEADLINE_TIMEUNIT);
+        if (difference >= DEADLINE_FOR_BOOKING) {
+            ticket.setStatus(Ticket.STATUS_DISABLED);
+            getFacade().edit(ticket);
+            return true;
+        }
+        return false;
     }
 
     public boolean isMaxBooked() {
@@ -143,7 +175,7 @@ public class TicketController implements Serializable {
                 } else {
                     persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("TicketCreated"));
 
-                    JsfUtil.addSuccessMessage("Successfully bought tickets for one day(" + selected.getEvent().getName() + ")");
+                    JsfUtil.addSuccessMessage("Successfully bought ticket for one day(" + selected.getEvent().getName() + ")");
                     JsfUtil.addSuccessMessage("Amount to pay: " + selected.getEvent().getPricePerDay());
                 }
             } else {
@@ -161,7 +193,11 @@ public class TicketController implements Serializable {
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("TicketUpdated"));
+        if (isDisabled(selected)) {
+            JsfUtil.addErrorMessage("Ticket is disabled due to the Booking Deadline.");
+        } else {
+            persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("TicketUpdated"));
+        }
     }
 
     public void destroy() {

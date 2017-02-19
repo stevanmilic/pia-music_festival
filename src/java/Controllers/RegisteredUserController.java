@@ -5,12 +5,14 @@ import Controllers.util.JsfUtil;
 import Controllers.util.JsfUtil.PersistAction;
 import Entities.Event;
 import Entities.Ticket;
+import Utils.DateHelper;
 import Utils.RegisteredUserFacade;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
@@ -21,6 +23,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 @Named("registeredUserController")
 @SessionScoped
@@ -32,16 +35,31 @@ public class RegisteredUserController implements Serializable {
     private RegisteredUser selected;
     private String confirmPassword;
 
-    public void checkEventForMessages(Event event) {
-        if (event.getEndDate().after(new Date())) {
+    HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+
+    public void onDeleteEventAddMessages(Event event) {
+        addMessages(event, event.getName() + " event has been canceled.",
+                event.getName() + " event has been canceled."
+                + "\nYou can get your money at the Box office");
+    }
+
+    public void onEditEventAddMessages(Event event) {
+        addMessages(event, event.getName() + " details has been changed, check your booking.",
+                event.getName() + " details has been changed, check with info with box office.");
+    }
+
+    private void addMessages(Event event, String messageForBooked, String messageForSold) {
+        Date now = new Date();
+        if (event.getEndDate().after(now)) {
             for (Ticket ticket : getFacade().getTicketsByEvent(event)) {
+                if (ticket.getType().equals(Ticket.TYPE_ONE_DAY)
+                        && ticket.getDayEvent().before(now)) {
+                    continue;
+                }
                 if (ticket.getStatus().equals(Ticket.STATUS_BOOKED)) {
-                    String message = event.getName() + " event has been canceled.";
-                    addMessage(ticket.getRegisteredUser(), message);
+                    addMessage(ticket.getRegisteredUser(), messageForBooked);
                 } else if (ticket.getStatus().equals(Ticket.STATUS_SOLD)) {
-                    String message = event.getName() + " event has been canceled."
-                            + "\nYou can get your money at the Box office";
-                    addMessage(ticket.getRegisteredUser(), message);
+                    addMessage(ticket.getRegisteredUser(), messageForSold);
                 }
             }
         }
@@ -50,6 +68,61 @@ public class RegisteredUserController implements Serializable {
     public void addMessage(RegisteredUser registeredUser, String message) {
         registeredUser.getMessages().add(message);
         getFacade().edit(registeredUser);
+    }
+
+    public void displayAndRemoveMessages() {
+        if (session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            RegisteredUser registeredUser = (RegisteredUser) session.getAttribute("user");
+            JsfUtil.addWarningMessage(registeredUser.getMessages());
+            registeredUser.getMessages().clear();
+            getFacade().edit(registeredUser);
+        }
+    }
+
+    public void updateTicketsStatus() {
+        if (session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("RegisteredUser")) {
+            RegisteredUser registeredUser = (RegisteredUser) session.getAttribute("user");
+            if (isDisabled(registeredUser)) {
+                registeredUser.setActivated(false);
+                getFacade().edit(registeredUser);
+                JsfUtil.addWarningMessage("Reached three disabled booking, "
+                        + "this account is deactivated.");
+                session.invalidate();
+            }
+        } else if (session.getAttribute("user") != null
+                && session.getAttribute("user").getClass().getSimpleName().equals("AdminUser")) {
+            for (RegisteredUser registeredUser : getFacade().findAll()) {
+                if (registeredUser.isActivated() && isDisabled(registeredUser)) {
+                    registeredUser.setActivated(false);
+                    getFacade().edit(registeredUser);
+                    JsfUtil.addSuccessMessage("User(" + registeredUser.getUserName() + ")" 
+                    + "is deactivated!");
+                }
+            }
+        }
+
+    }
+
+    public boolean isDisabled(RegisteredUser registeredUser) {
+        int ticketsDisabled = 0;
+        for (Ticket ticket : getFacade().getTicketsByRegisteredUser(registeredUser)) {
+            if (ticket.getStatus().equals(Ticket.STATUS_BOOKED)) {
+                long difference = DateHelper.getDateDiff(ticket.getTicketId().getTimestamp(),
+                        new Date(), TicketController.DEADLINE_TIMEUNIT);
+                if (difference >= TicketController.DEADLINE_FOR_BOOKING) {
+                    getFacade().setTicketStatus(ticket, Ticket.STATUS_DISABLED);
+                    ticketsDisabled++;
+                }
+            } else if (ticket.getStatus().equals(Ticket.STATUS_DISABLED)) {
+                ticketsDisabled++;
+            }
+            if (ticketsDisabled >= 3) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getConfirmPassword() {

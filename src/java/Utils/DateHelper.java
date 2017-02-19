@@ -23,7 +23,7 @@ public class DateHelper {
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
-
+    
     public static String getFormatedDate(Date date) {
         if (date == null) {
             return null;

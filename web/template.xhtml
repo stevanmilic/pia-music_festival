@@ -14,7 +14,7 @@
 
     <h:body>
 
-        <p:growl id="growl" life="3000" />
+        <p:growl id="growl" life="5000" />
 
         <p:layout fullPage="true">
             <p:layoutUnit position="north" size="65" header="#{bundle.AppName}">
@@ -51,11 +51,11 @@
             </p:layoutUnit>
 
         </p:layout>
-        
+
         <ui:include src="authentication/Login.xhtml" rendered="#{empty user}"/> 
         <ui:include src="authentication/ChangePassword.xhtml" rendered="#{empty user}"/> 
         <ui:include src="registeredUser/Create.xhtml" rendered="#{empty user}"/> 
-        
+
     </h:body>
 
 </html>

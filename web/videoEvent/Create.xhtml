@@ -10,6 +10,12 @@
 
         <p:dialog id="VideoEventCreateDlg" widgetVar="VideoEventCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateVideoEventTitle}">
             <h:form id="VideoEventCreateForm">
+                <p:steps activeIndex="3" styleClass="custom" readonly="false">
+                    <p:menuitem value="Definition" url="#"/>
+                    <p:menuitem value="Details" url="#"/>
+                    <p:menuitem value="Images" url="#"/>
+                    <p:menuitem value="Videos" url="#"/>
+                </p:steps>
                 <p:fileUpload fileUploadListener="#{videoEventController.handleFileUpload}" mode="advanced"
                               multiple="true" update="messages" allowTypes="/(\.|\/)(avi|mov|mpeg4|mp4)$/" />
                 <p:growl id="messages" showDetail="true" />

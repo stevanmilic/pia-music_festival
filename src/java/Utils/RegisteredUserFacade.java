@@ -31,13 +31,25 @@ public class RegisteredUserFacade extends AbstractFacade<RegisteredUser> {
     public RegisteredUserFacade() {
         super(RegisteredUser.class);
     }
-    
-    public List<RegisteredUser> getLastLoggedInUsers(){
+
+    public List<RegisteredUser> getLastLoggedInUsers() {
         return em.createQuery("select ru from RegisteredUser ru order by ru.lastLogin desc").setMaxResults(10).getResultList();
     }
-    
-    public List<Ticket> getTicketsByEvent(Event event){
+
+    public List<Ticket> getTicketsByEvent(Event event) {
         return em.createQuery("select t from Ticket t where t.event = :event")
                 .setParameter("event", event).getResultList();
+    }
+
+    public List<Ticket> getTicketsByRegisteredUser(RegisteredUser registeredUser) {
+        return em.createQuery("select t from Ticket t where t.registeredUser = :registeredUser")
+                .setParameter("registeredUser", registeredUser).getResultList();
+    }
+    
+    public void setTicketStatus(Ticket ticket, String status){
+        em.createQuery("update Ticket t set t.status = :status where t = :ticket")
+                .setParameter("status", status)
+                .setParameter("ticket", ticket)
+                .executeUpdate();
     }
 }

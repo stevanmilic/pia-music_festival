@@ -6,6 +6,7 @@
 package Entities;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -25,7 +26,7 @@ import javax.persistence.Table;
 @PrimaryKeyJoinColumn(name = "ID")
 public class RegisteredUser extends User {
 
-    @OneToMany(mappedBy = "registeredUser")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "registeredUser")
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "registeredUser")

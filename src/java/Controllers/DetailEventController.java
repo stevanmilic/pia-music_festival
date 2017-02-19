@@ -31,6 +31,10 @@ public class DetailEventController implements Serializable {
     private List<DetailEvent> items = null;
     private DetailEvent selected;
     private Event eventSelected;
+    
+    public Event getEventSelected(){
+        return eventSelected;
+    }
 
     public DetailEventController() {
     }

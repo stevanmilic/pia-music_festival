@@ -20,13 +20,13 @@
                             <p:ajax event="dateSelect" update="endTime"/>
                         </p:calendar>
                         <p:outputLabel value="#{bundle.EditDetailEventLabel_endTime}" for="endTime" />
-                        <p:calendar id="endTime" pattern="dd/MM/yyyy HH:mm:ss a" disabled="#{empty eventController.selected.startDate}" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}">
+                        <p:calendar id="endTime" pattern="dd/MM/yyyy HH:mm:ss a" disabled="#{empty eventController.selected.startDate}" value="#{detailEventController.selected.endTime}" title="#{bundle.EditDetailEventTitle_endTime}" required="true">
                             <p:ajax event="dateSelect" update="startTime"/>
-                        </p:calendar>
-                        <p:outputLabel value="#{bundle.EditDetailEventLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{detailEventController.selected.id}" title="#{bundle.EditDetailEventTitle_id}" />
+                        </p:calendar>        
                     </p:panelGrid>
-                    <p:commandButton actionListener="#{detailEventController.update}" value="#{bundle.Save}" update="display,:DetailEventListForm:datalist,:growl" oncomplete="handleSubmit(args, 'DetailEventEditDialog');"/>
+                    <p:commandButton actionListener="#{detailEventController.update}" value="#{bundle.Save}" update="display,:DetailEventListForm:datalist,:growl" oncomplete="handleSubmit(args, 'DetailEventEditDialog');">
+                        <f:actionListener binding="#{registeredUserController.onEditEventAddMessages(detailEventController.eventSelected)}"/>
+                    </p:commandButton>
                     <p:commandButton value="#{bundle.Cancel}" onclick="DetailEventEditDialog.hide()"/>
                 </h:panelGroup>
             </h:form>
