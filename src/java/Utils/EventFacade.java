@@ -5,6 +5,7 @@
  */
 package Utils;
 
+import Entities.DetailEvent;
 import Entities.Event;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -38,6 +39,10 @@ public class EventFacade extends AbstractFacade<Event> {
     public List<Event> getRecentEvents(){
         Query query = em.createNativeQuery("SELECT * FROM event WHERE NOW() < end_date ORDER BY ABS(DATEDIFF(start_date, NOW())) LIMIT 5", Event.class);
         return query.getResultList();
+    }
+    
+    public void persistDetailEvent(DetailEvent detailEvent){
+        em.persist(detailEvent);
     }
     
 }

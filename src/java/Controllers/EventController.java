@@ -9,12 +9,9 @@ import Utils.DateHelper;
 import Utils.EventFacade;
 import Utils.InputHelper;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -24,7 +21,6 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -46,6 +42,9 @@ public class EventController implements Serializable {
     private Event selected;
     private boolean initialized = false;
 
+    public static final int MAX_RESERVATIONS_PER_DAY = 5;
+    public static final int MAX_TICKETS_PER_DAY = 50;
+
     HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 
     public EventController() {
@@ -54,79 +53,97 @@ public class EventController implements Serializable {
 
     public void handleFileUpload(FileUploadEvent fileUploadEvent) {
         try {
-            FacesMessage message = new FacesMessage("Succesful", fileUploadEvent.getFile().getFileName() + " is uploaded.");
+            JsfUtil.addSuccessMessage(fileUploadEvent.getFile().getFileName() + " is uploaded.");
 
             String[] tables = InputHelper.convertStreamToString(fileUploadEvent.getFile().getInputstream()).split("\n\n");
 
             if (tables.length != 4) {
                 JsfUtil.addErrorMessage("Wrong formated csv file, not enough tables!");
             } else {
-
-                Event event = new Event();
+                boolean isEventCreated = false;
 
                 for (int index = 0; index < tables.length; index++) {
                     Iterable<CSVRecord> records = CSVParser.parse(tables[index].replace("\", ", "\","), CSVFormat.RFC4180.withFirstRecordAsHeader());
                     for (CSVRecord record : records) {
                         switch (index) {
-                            case 0: {
-                                event.setName(record.get("Festival"));
-                                event.setPlace(record.get("Place"));
-                                event.setStartDate(DateHelper.getDateFromString(record.get("StartDate")));
-                                event.setEndDate(DateHelper.getDateFromString(record.get("EndDate")));
+                            case 0:
+                                eventCsv(record);
                                 break;
-                            }
-                            case 1: {
-                                switch (record.get("TicketType")) {
-                                    case "per day":
-                                        event.setPricePerDay(Integer.parseInt(record.get("Price")));
-                                        break;
-                                    case "whole festival":
-                                        event.setPriceForWhole(Integer.parseInt(record.get("Price")));
-                                        break;
-                                    default:
-                                        //error
-                                        break;
+                            case 1:
+                                priceEventCsv(record);
+                                break;
+                            case 2:
+                                if (!isEventCreated) {
+                                    create();
+                                    isEventCreated = true;
                                 }
+                                detailEventCsv(record);
                                 break;
-                            }
-                            case 2: {
-                                DetailEvent detailEvent = new DetailEvent();
-                                detailEvent.setPerformer(record.get("Performer"));
-                                detailEvent.setStartTime(DateHelper.getTimestampFromString(record.get("StartDate") + " " + record.get("StartTime")));
-                                detailEvent.setEndTime(DateHelper.getTimestampFromString(record.get("EndDate") + " " + record.get("EndTime")));
-                                detailEvent.setEvent(event);
-                                //persist(detailEvent)
+                            case 3:
+                                socialEventCsv(record);
                                 break;
-                            }
-                            case 3: {
-                                switch (record.get("Social Network")) {
-                                    case "Facebook":
-                                        event.setFacebookLink(record.get("Link"));
-                                        break;
-                                    case "Twitter":
-                                        event.setTwitterLink(record.get("Link"));
-                                        break;
-                                    case "Instragram":
-                                        event.setInstagramLink(record.get("Link"));
-                                        break;
-                                    case "YouTube":
-                                        event.setYoutubeLink(record.get("Link"));
-                                        break;
-                                    default:
-                                        //error
-                                        break;
-                                }
-
-                            }
                         }
                     }
 
                 }
+                update();
+                JsfUtil.addSuccessMessage("Successfully imported csv file!");
             }
-        } catch (IOException iOException) {
-            JsfUtil.addErrorMessage(iOException, "Wrong formated csv file!");
-        } catch (ParseException parseException) {
-            JsfUtil.addErrorMessage(parseException, "Wrong formated csv file!");
+        } catch (IOException | ParseException exception) {
+            JsfUtil.addErrorMessage(exception, "Wrong formated csv file!");
+        } catch (Exception exception) {
+            JsfUtil.addErrorMessage(exception, "Wrong formated csv file, " + exception.getMessage());
+        }
+
+    }
+
+    private void eventCsv(CSVRecord record) throws ParseException {
+        selected.setName(record.get("Festival"));
+        selected.setPlace(record.get("Place"));
+        selected.setStartDate(DateHelper.getDateFromString(record.get("StartDate")));
+        selected.setEndDate(DateHelper.getDateFromString(record.get("EndDate")));
+        selected.setMaxReservations(MAX_RESERVATIONS_PER_DAY);
+        selected.setMaxTicketsPerDay(MAX_TICKETS_PER_DAY);
+    }
+
+    private void priceEventCsv(CSVRecord record) throws Exception {
+        switch (record.get("TicketType")) {
+            case "per day":
+                selected.setPricePerDay(Integer.parseInt(record.get("Price")));
+                break;
+            case "whole festival":
+                selected.setPriceForWhole(Integer.parseInt(record.get("Price")));
+                break;
+            default:
+                throw new Exception("Wrong formated csv file, social network table");
+        }
+    }
+
+    private void detailEventCsv(CSVRecord record) throws ParseException {
+        DetailEvent detailEvent = new DetailEvent();
+        detailEvent.setPerformer(record.get("Performer"));
+        detailEvent.setStartTime(DateHelper.getTimestampFromString(record.get("StartDate") + " " + record.get("StartTime")));
+        detailEvent.setEndTime(DateHelper.getTimestampFromString(record.get("EndDate") + " " + record.get("EndTime")));
+        detailEvent.setEvent(selected);
+        getFacade().persistDetailEvent(detailEvent);
+    }
+
+    private void socialEventCsv(CSVRecord record) throws Exception {
+        switch (record.get("Social Network")) {
+            case "Facebook":
+                selected.setFacebookLink(record.get("Link"));
+                break;
+            case "Twitter":
+                selected.setTwitterLink(record.get("Link"));
+                break;
+            case "Instagram":
+                selected.setInstagramLink(record.get("Link"));
+                break;
+            case "YouTube":
+                selected.setYoutubeLink(record.get("Link"));
+                break;
+            default:
+                throw new Exception("Wrong formated csv file, social network table");
         }
     }
 

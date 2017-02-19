@@ -57,16 +57,21 @@
 
                         <p:outputLabel value="#{bundle.CreateEventLabel_youtubeLink}" for="youtubeLink" />
                         <p:inputText id="youtubeLink" value="#{eventController.selected.youtubeLink}" title="#{bundle.CreateEventTitle_youtubeLink}" />
-                        
+
+                        <p:outputLabel value="Import from csv file"/>
                         <p:fileUpload fileUploadListener="#{eventController.handleFileUpload}" mode="advanced"
-                                       update=":growl" allowTypes="/(\.|\/)(csv)$/" />
+                                      update=":growl,guiNext,csvNext" allowTypes="/(\.|\/)(csv)$/" />
 
                     </p:panelGrid>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="EventCreateDialog.hide()"/>
-                    <p:commandButton value="#{bundle.Next}" actionListener="#{eventController.create}" update="display,:growl,:DetailEventCreateForm" oncomplete="handleSubmit(args,'EventCreateDialog');PF('DetailEventCreateDialog').show();">
+                    <p:commandButton value="#{bundle.Cancel}" onclick="EventCreateDialog.hide()" immediate="true"/>
+                    
+                    <p:commandButton id="guiNext" disabled="#{not empty eventController.selected.name}" value="#{bundle.Next}" actionListener="#{eventController.create}" update="display,:growl,:DetailEventCreateForm" oncomplete="handleSubmit(args,'EventCreateDialog');PF('DetailEventCreateDialog').show();">
                         <f:actionListener binding="#{detailEventController.setEventSelected(eventController.selected)}"/>
                         <f:actionListener binding="#{detailEventController.prepareCreate()}"/>
                     </p:commandButton>
+                    
+                    <p:commandButton  id="csvNext" disabled="#{empty eventController.selected.name}" value="Skip to Image selection(CSV)" actionListener="#{imageEventController.setEventSelected(eventController.selected)}"
+                                      update="display,:growl" oncomplete="handleSubmit(args,'EventCreateDialog');PF('ImageEventCreateDialog').show();" immediate="true"/>
                 </h:panelGroup>
             </h:form>
         </p:dialog>
